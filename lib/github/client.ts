@@ -16,21 +16,66 @@ import {
   GitHubNotFoundError,
   isNotFoundError,
 } from './errors';
+import fs from 'fs/promises';
+import { rmSync } from 'fs';
+import path from 'path';
 
 const GITHUB_API_BASE = 'https://api.github.com';
 const DEFAULT_PER_PAGE = 100;
-const CACHE_DURATION = 1000 * 60 * 30; // 30 minutes
+const CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 hours
+const CACHE_DIR = path.join(process.cwd(), '.cache', 'github');
 
 interface CacheEntry<T> {
   data: T;
   timestamp: number;
+  etag?: string | undefined;
 }
 
-const profileCache = new Map<string, CacheEntry<GitHubProfile>>();
-const repositoriesCache = new Map<string, CacheEntry<NormalizedRepository[]>>();
+interface CacheFile {
+  profile?: CacheEntry<GitHubProfile>;
+  repositories?: CacheEntry<NormalizedRepository[]>;
+  repositoriesByName?: Record<string, CacheEntry<NormalizedRepository>>;
+}
 
-function getCacheKey(username: string, suffix: string = ''): string {
-  return `${username}:${suffix}`;
+// In-memory layer in front of the file cache, so repeated reads within a
+// process don't hit the disk and the cache still works on read-only filesystems.
+const memoryCache = new Map<string, CacheFile>();
+
+function getCacheFilePath(username: string): string {
+  // Usernames reach this from request input, so keep them out of path traversal.
+  const safeName = username.toLowerCase().replace(/[^a-z0-9-]/g, '_');
+  return path.join(CACHE_DIR, `${safeName}.json`);
+}
+
+async function readCache(username: string): Promise<CacheFile> {
+  const inMemory = memoryCache.get(username);
+  if (inMemory) {
+    return inMemory;
+  }
+
+  try {
+    const content = await fs.readFile(getCacheFilePath(username), 'utf-8');
+    const cache: CacheFile = JSON.parse(content);
+    memoryCache.set(username, cache);
+    return cache;
+  } catch {
+    return {};
+  }
+}
+
+async function updateCache(username: string, update: (cache: CacheFile) => void): Promise<void> {
+  const cache = { ...(await readCache(username)) };
+  update(cache);
+  memoryCache.set(username, cache);
+
+  // Persisting is best-effort: a failed write (e.g. read-only serverless
+  // filesystem) must not discard data that was fetched successfully.
+  try {
+    await fs.mkdir(CACHE_DIR, { recursive: true });
+    await fs.writeFile(getCacheFilePath(username), JSON.stringify(cache, null, 2));
+  } catch (error) {
+    console.warn('Failed to persist GitHub cache:', error);
+  }
 }
 
 function isCacheValid(entry: CacheEntry<unknown>): boolean {
@@ -95,7 +140,6 @@ async function handleResponse<T>(response: Response): Promise<T> {
   }
 
   if (!response.ok) {
-    const errorText = await response.text().catch(() => 'Unknown error');
     throw new GitHubApiError(
       `GitHub API error: ${response.status} ${response.statusText}`,
       response.status,
@@ -106,32 +150,62 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json();
 }
 
+/**
+ * Fetches with a conditional request. Returns null on 304 Not Modified, which
+ * GitHub does not count against the rate limit.
+ */
+async function fetchWithETag<T>(
+  url: string,
+  etag: string | undefined
+): Promise<{ data: T; etag: string | undefined } | null> {
+  const response = await fetchWithTimeout(url, {
+    headers: {
+      ...getAuthHeaders(),
+      ...(etag ? { 'If-None-Match': etag } : {}),
+    },
+  });
+
+  if (response.status === 304) {
+    return null;
+  }
+
+  const data = await handleResponse<T>(response);
+  return { data, etag: response.headers.get('ETag') || undefined };
+}
+
 export async function fetchProfile(username: string): Promise<GitHubProfile | null> {
   if (!username) {
     return null;
   }
 
-  const cacheKey = getCacheKey(username, 'profile');
-  const cached = profileCache.get(cacheKey);
-
-  if (cached && isCacheValid(cached)) {
-    return cached.data;
+  const cache = await readCache(username);
+  if (cache.profile && isCacheValid(cache.profile)) {
+    return cache.profile.data;
   }
 
   try {
-    const response = await fetchWithTimeout(
+    const result = await fetchWithETag<GitHubRawProfile>(
       `${GITHUB_API_BASE}/users/${username}`,
-      { headers: getAuthHeaders() }
+      cache.profile?.etag
     );
 
-    const rawProfile = await handleResponse<GitHubRawProfile>(response);
-    const profile = normalizeProfile(rawProfile);
+    const profile = result ? normalizeProfile(result.data) : cache.profile?.data;
+    if (!profile) {
+      return null;
+    }
 
-    profileCache.set(cacheKey, { data: profile, timestamp: Date.now() });
+    await updateCache(username, (c) => {
+      c.profile = { data: profile, timestamp: Date.now(), etag: result ? result.etag : c.profile?.etag };
+    });
+
     return profile;
   } catch (error) {
     if (isNotFoundError(error)) {
       return null;
+    }
+    // On error, serve stale cache if available
+    if (cache.profile) {
+      return cache.profile.data;
     }
     throw error;
   }
@@ -142,11 +216,9 @@ export async function fetchRepositories(username: string): Promise<NormalizedRep
     return [];
   }
 
-  const cacheKey = getCacheKey(username, 'repositories');
-  const cached = repositoriesCache.get(cacheKey);
-
-  if (cached && isCacheValid(cached)) {
-    return cached.data;
+  const cache = await readCache(username);
+  if (cache.repositories && isCacheValid(cache.repositories)) {
+    return cache.repositories.data;
   }
 
   try {
@@ -164,74 +236,97 @@ export async function fetchRepositories(username: string): Promise<NormalizedRep
 
       if (rawRepos.length === 0) {
         hasMore = false;
-        break;
-      }
-
-      const normalized = rawRepos.map(normalizeRepository);
-      allRepos.push(...normalized);
-
-      if (rawRepos.length < DEFAULT_PER_PAGE) {
-        hasMore = false;
       } else {
-        page++;
+        const normalized = rawRepos.map(normalizeRepository);
+        allRepos.push(...normalized);
+
+        if (rawRepos.length < DEFAULT_PER_PAGE) {
+          hasMore = false;
+        } else {
+          page++;
+        }
       }
     }
 
-    repositoriesCache.set(cacheKey, { data: allRepos, timestamp: Date.now() });
+    await updateCache(username, (c) => {
+      c.repositories = { data: allRepos, timestamp: Date.now() };
+    });
+
     return allRepos;
   } catch (error) {
     if (isNotFoundError(error)) {
       return [];
+    }
+    // On error, serve stale cache if available
+    if (cache.repositories) {
+      return cache.repositories.data;
     }
     throw error;
   }
 }
 
 export async function fetchRepository(username: string, repoName: string): Promise<NormalizedRepository | null> {
-  const cacheKey = getCacheKey(username, `repo:${repoName}`);
-  const cached = repositoriesCache.get(cacheKey);
+  const cache = await readCache(username);
+  const cacheKey = `repo:${repoName}`;
+  const cached = cache.repositoriesByName?.[cacheKey];
 
-  if (cached && isCacheValid(cached) && cached.data.length === 1) {
-    return cached.data[0];
+  if (cached && isCacheValid(cached)) {
+    return cached.data;
   }
 
   try {
-    const response = await fetchWithTimeout(
+    const result = await fetchWithETag<GitHubRawRepository>(
       `${GITHUB_API_BASE}/repos/${username}/${repoName}`,
-      { headers: getAuthHeaders() }
+      cached?.etag
     );
 
-    const rawRepo = await handleResponse<GitHubRawRepository>(response);
-    const repo = normalizeRepository(rawRepo);
+    const repo = result ? normalizeRepository(result.data) : cached?.data;
+    if (!repo) {
+      return null;
+    }
 
-    repositoriesCache.set(cacheKey, { data: [repo], timestamp: Date.now() });
+    await updateCache(username, (c) => {
+      c.repositoriesByName = {
+        ...c.repositoriesByName,
+        [cacheKey]: { data: repo, timestamp: Date.now(), etag: result ? result.etag : cached?.etag },
+      };
+    });
+
     return repo;
   } catch (error) {
     if (isNotFoundError(error)) {
       return null;
+    }
+    if (cached) {
+      return cached.data;
     }
     throw error;
   }
 }
 
 export function clearCache(username?: string): void {
-  if (username) {
-    const prefix = getCacheKey(username);
-    for (const key of profileCache.keys()) {
-      if (key.startsWith(prefix)) profileCache.delete(key);
+  try {
+    if (username) {
+      memoryCache.delete(username);
+      rmSync(getCacheFilePath(username), { force: true });
+    } else {
+      memoryCache.clear();
+      rmSync(CACHE_DIR, { recursive: true, force: true });
     }
-    for (const key of repositoriesCache.keys()) {
-      if (key.startsWith(prefix)) repositoriesCache.delete(key);
-    }
-  } else {
-    profileCache.clear();
-    repositoriesCache.clear();
+  } catch (error) {
+    console.warn('Failed to clear GitHub file cache:', error);
   }
 }
 
 export function getCacheStats(): { profileCacheSize: number; repositoriesCacheSize: number } {
-  return {
-    profileCacheSize: profileCache.size,
-    repositoriesCacheSize: repositoriesCache.size,
-  };
+  let profileCacheSize = 0;
+  let repositoriesCacheSize = 0;
+
+  for (const cache of memoryCache.values()) {
+    if (cache.profile) profileCacheSize++;
+    if (cache.repositories) repositoriesCacheSize++;
+    repositoriesCacheSize += Object.keys(cache.repositoriesByName ?? {}).length;
+  }
+
+  return { profileCacheSize, repositoriesCacheSize };
 }
