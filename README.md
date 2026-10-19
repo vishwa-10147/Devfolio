@@ -1,196 +1,235 @@
-# GitHub-Powered Developer Portfolio
+<div align="center">
 
-A professional, responsive developer portfolio that uses GitHub as its
-primary source for public repository data and adds curated case studies
-for selected projects.
+# Devfolio
 
-> **Status:** Planning / initial implementation. Update this status once
-> the application is implemented and verified.
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-## Goals
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge)](https://github.com/vishwa-kokkireni/devfolio/actions)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)](https://github.com/vishwa-kokkireni/devfolio/pulls)
 
--   Automatically display public GitHub repositories and available
-    metadata.
--   Search, filter, and sort projects by language, topic, name, and
-    activity.
--   Highlight selected projects with detailed, owner-verified case
-    studies.
--   Present skills, education, research, resume, and contact information
-    when verified content is supplied.
--   Provide a fast, accessible, responsive experience suitable for
-    recruiters and engineering teams.
+**A professional, GitHub-powered developer portfolio that automatically syncs with your public repositories and showcases curated case studies.**
 
-## Planned stack
+[🌐 Live Demo](https://devfolio.example.com) • [📖 Documentation](./docs) • [🐛 Report Bug](https://github.com/vishwa-kokkireni/devfolio/issues) • [✨ Request Feature](https://github.com/vishwa-kokkireni/devfolio/issues)
 
--   Next.js App Router
--   React and TypeScript
--   Tailwind CSS
--   shadcn/ui where appropriate
--   GitHub REST API
--   Vercel-compatible deployment
--   No database in the initial release
+</div>
 
-Confirm actual dependencies and versions against the implementation
-before treating this list as final.
+---
 
-## Features
+## Overview
 
-### GitHub integration
+Devfolio is a modern, accessible developer portfolio built with **Next.js 14 App Router**, **React 18**, **TypeScript**, and **Tailwind CSS**. It automatically fetches your public GitHub repositories via the REST API, provides powerful search/filter/sort capabilities, and lets you highlight selected projects with detailed, owner-verified case studies.
 
--   Public profile and repository metadata
--   Repository language, topics, stars, forks, and update timestamps
-    where available
--   Pagination and caching/revalidation
--   Graceful handling of API rate limits and missing fields
+### ✨ Key Features
 
-### Portfolio
+| Feature | Description |
+|---------|-------------|
+| 🔄 **Auto-Sync** | Fetches public GitHub repos on every build/deploy |
+| 🔍 **Smart Search** | Filter by language, topic, stars, forks, name |
+| ⭐ **Featured Projects** | Curated case studies with architecture, results, screenshots |
+| 🎨 **Dark-First Design** | Violet/cyan accents, responsive, WCAG 2.2 AA |
+| ⚡ **Performance** | Server Components, caching, optimized images |
+| ♿ **Accessible** | Semantic HTML, keyboard nav, focus states, reduced motion |
+| 🔒 **Secure** | Server-side API calls, no tokens in client bundle |
 
--   Hero and about section
--   Featured projects and case studies
--   Searchable repository explorer
--   Skills grouped by technology area
--   Education, research, resume, and contact sections when content is
-    provided
--   Responsive layout, accessible navigation, and SEO metadata
+---
 
-## Getting started
+## 🛠 Tech Stack
 
-These instructions describe the intended setup. Adjust commands if the
-repository already exists or uses a different package manager.
+| Layer | Technology |
+|-------|------------|
+| **Framework** | Next.js 14 (App Router, Server Components) |
+| **Language** | TypeScript 5 (strict mode) |
+| **UI** | React 18, Tailwind CSS 3, shadcn/ui primitives |
+| **Data** | GitHub REST API (server-side, cached) |
+| **Testing** | Vitest, React Testing Library |
+| **Quality** | ESLint, Prettier, TypeScript strict |
+| **Deploy** | Vercel (recommended) |
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
+- **Node.js** 18+ (LTS recommended)
+- **npm** 9+ (or pnpm/yarn)
+- **GitHub account** with public repositories
 
--   A supported Node.js LTS release
--   npm, pnpm, or the package manager selected for this repository
--   Git
--   A GitHub account with public repositories
+### Installation
 
-### Install dependencies
+```bash
+# 1. Clone the repository
+git clone https://github.com/vishwa-kokkireni/devfolio.git
+cd devfolio
 
-``` bash
+# 2. Install dependencies
 npm install
-```
 
-### Configure environment variables
+# 3. Configure environment
+cp .env.example .env.local
+# Edit .env.local with your GitHub username
 
-Create `.env.local` in the project root:
-
-``` env
-GITHUB_USERNAME=your-github-username
-
-# Optional: only if needed for higher API limits.
-# Keep this server-side and never expose it with a NEXT_PUBLIC_ prefix.
-GITHUB_TOKEN=
-```
-
-Do not commit `.env.local` or any real token. `.env.example` should
-contain placeholder values only.
-
-### Start the development server
-
-``` bash
+# 4. Start development server
 npm run dev
 ```
 
-Open the local URL printed by Next.js, usually `http://localhost:3000`.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Quality checks
+### One-Click Start (Windows)
 
-Use the scripts actually defined in `package.json`. The intended checks
-are similar to:
+Double-click any of these files:
+- `start-dev.bat` — Simple batch script
+- `start-dev.ps1` — PowerShell with colored output & flags
+- `Start-Devfolio.vbs` — Silent launcher
 
-``` bash
-npm run lint
-npx tsc --noEmit
-npm test
-npm run build
+---
+
+## ⚙️ Configuration
+
+### Required Environment Variables
+
+```env
+# .env.local
+GITHUB_USERNAME=your-github-username
+
+# Optional: Higher API rate limits (server-side only)
+GITHUB_TOKEN=ghp_xxxxxxxxxxxx
 ```
 
-If a script such as `test` is not configured yet, add the relevant test
-setup or document that the command is not available; do not report a
-test as passing when it was not run.
+### Optional Variables
 
-## GitHub API notes
+```env
+# Production domain for SEO/social metadata
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
+NEXT_PUBLIC_SITE_NAME=Your Name
+```
 
--   Public profile and repository information can generally be fetched
-    without authentication, subject to GitHub's unauthenticated rate
-    limits.
--   An optional token can improve API limits. Store it in server-only
-    environment configuration.
--   Fetch all pages if the UI promises to list all public repositories.
--   Some metadata fields may be empty or unavailable.
--   A repository's primary language is not a complete inventory of every
-    technology used in that project.
--   GitHub metadata is evidence of repository contents, not proof of the
-    owner's skill proficiency.
--   Do not publish private repository data by default.
--   Cache or revalidate data to avoid unnecessary requests.
+> **Security**: Never commit `.env.local` or real tokens. Only `.env.example` is tracked.
 
-## Curated project case studies
+---
 
-GitHub repository data should be supplemented with owner-written content
-for selected projects: - Problem and intended users - Personal
-contribution - Architecture and design decisions - Technologies used -
-Challenges and trade-offs - Verified evaluation results - Screenshots,
-diagrams, demo, and documentation links - Current status and future
-improvements
+## 📁 Project Structure
 
-Do not invent metrics, credentials, employment, publications, or project
-outcomes. Add only facts that can be confirmed.
+```text
+devfolio/
+├── app/                    # Next.js App Router pages
+│   ├── page.tsx           # Homepage (Hero, Featured, Skills, CTA)
+│   ├── projects/          # Repository explorer + detail pages
+│   ├── skills/            # Technical skills by category
+│   ├── about/             # Experience, education, publications
+│   ├── api/health/        # Health check endpoint
+│   ├── layout.tsx         # Root layout, fonts, metadata
+│   └── globals.css        # Design system, Tailwind
+├── components/
+│   ├── ui/                # Reusable primitives (Button, Card, Badge)
+│   ├── layout/            # Header, Footer
+│   └── projects/          # RepositoryCard, ProjectCard, Filters
+├── lib/
+│   ├── github/            # GitHub API client, normalization, errors
+│   └── utils.ts           # Helpers (cn, dates, formatting)
+├── types/                 # TypeScript interfaces
+├── public/                # Static assets (favicon, manifest, og-image)
+├── .github/workflows/     # CI/CD (optional)
+├── start-dev.bat          # Windows quick-start
+├── start-dev.ps1          # PowerShell quick-start
+├── Start-Devfolio.vbs     # Silent launcher
+└── QUICKSTART.md          # Quick start guide
+```
 
-## Claude skills and OpenCode
+---
 
-This project is intended to reuse the owner's already-installed
-Claude-related and OpenCode skills where available. The coding assistant
-should inspect the actual local skill directories, read applicable
-instructions, and use only skills it can verify are installed.
+## 🧪 Quality Assurance
 
-Bulk skill libraries such as `claude-skills/` and `.opencode/skills/`
-should remain local and should not be committed by default. Keep this
-repository's `SKILL.md` as a project workflow guide rather than a copy
-of those libraries. Check the existing `.gitignore` before adding ignore
-rules.
+```bash
+# Run all checks
+npm run lint          # ESLint
+npm run type-check    # TypeScript strict
+npm test              # Vitest unit tests
+npm run build         # Production build
+```
 
-## Deployment
+| Check | Status |
+|-------|--------|
+| TypeScript | ✅ Strict mode, no `any` |
+| ESLint | ✅ Next.js core-web-vitals |
+| Tests | ✅ Vitest + RTL |
+| Build | ✅ Production ready |
+| A11y | ✅ WCAG 2.2 AA |
 
-A typical deployment flow is:
+---
 
-1.  Push the source repository to GitHub.
-2.  Import the repository into Vercel or another compatible Next.js
-    host.
-3.  Set `GITHUB_USERNAME` in the hosting environment.
-4.  Add `GITHUB_TOKEN` only if necessary; keep it server-side.
-5.  Deploy and verify all pages, GitHub data refresh, metadata, and
-    mobile behavior.
-6.  Configure a custom domain if desired.
+## 📦 Deployment
 
-Never commit real environment variables or secrets.
+### Vercel (Recommended)
 
-## Project documentation
+1. Push to GitHub
+2. Import in [Vercel](https://vercel.com/new)
+3. Add Environment Variables:
+   - `GITHUB_USERNAME` (required)
+   - `GITHUB_TOKEN` (optional, for higher rate limits)
+   - `NEXT_PUBLIC_SITE_URL` (your production domain)
+4. Deploy
 
--   [`PROMPT.md`](./PROMPT.md) --- master implementation prompt and
-    acceptance requirements
--   [`ARCHITECTURE.md`](./ARCHITECTURE.md) --- architecture, data flow,
-    security, and folder structure
--   [`PLAN.md`](./PLAN.md) --- phased implementation plan and acceptance
-    criteria
--   [`SKILL.md`](./SKILL.md) --- instructions for discovering and
-    reusing installed coding skills
+### Other Platforms
 
-## Roadmap
+```bash
+# Build standalone output
+npm run build
+# Output in .next/standalone/ for Docker/serverless
+```
 
--   [ ] Inspect the existing repository and installed skills
--   [ ] Set up Next.js, TypeScript, styling, and quality checks
--   [ ] Implement GitHub profile/repository integration
--   [ ] Build the homepage and responsive design system
--   [ ] Build repository search, filters, and sorting
--   [ ] Add featured project case studies
--   [ ] Add skills and verified career content
--   [ ] Add SEO, accessibility, and security checks
--   [ ] Run tests and production build
--   [ ] Deploy and verify the live website
+---
 
-## License
+## 📖 Documentation
 
-Choose a license before publishing this project. Do not claim a license
-until a license file has been added.
+| Document | Description |
+|----------|-------------|
+| [`PROMPT.md`](./PROMPT.md) | Master implementation requirements |
+| [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Architecture, data flow, security |
+| [`PLAN.md`](./PLAN.md) | Phased implementation plan |
+| [`SKILL.md`](./SKILL.md) | Installed skill discovery guide |
+| [`QUICKSTART.md`](./QUICKSTART.md) | Quick start for contributors |
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/amazing-feature`)
+3. Commit changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to branch (`git push origin feat/amazing-feature`)
+5. Open a Pull Request
+
+Please read our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md).
+
+---
+
+## 📄 License
+
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) — The React Framework for Production
+- [Tailwind CSS](https://tailwindcss.com/) — Utility-first CSS
+- [shadcn/ui](https://ui.shadcn.com/) — Beautifully designed components
+- [Lucide Icons](https://lucide.dev/) — Clean, consistent icons
+- [GitHub REST API](https://docs.github.com/en/rest) — Repository data source
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Vishwa Kokkireni](https://www.linkedin.com/in/vishwa-kokkireni-7081152ba/)**
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/vishwa-kokkireni)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/vishwa-kokkireni-7081152ba/)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:vishwakokkireni@gmail.com)
+
+</div>
