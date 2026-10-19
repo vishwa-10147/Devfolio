@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
 import { Card, Badge } from '@/components/ui';
 import { fetchRepository } from '@/lib/github';
-import { ArrowLeft, Github, ExternalLink, Calendar, Star, Fork, Tag, FileCode } from 'lucide-react';
+import { ArrowLeft, Github, ExternalLink, Calendar, Star, GitFork, Tag, FileCode } from 'lucide-react';
 import Link from 'next/link';
 import { cn, formatDate } from '@/lib/utils';
 import type { NormalizedRepository, CuratedProject } from '@/types';
@@ -126,11 +126,11 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                   </Badge>
                   <Badge variant="outline">
                     <Star className="h-3 w-3 mr-1" aria-hidden="true" />
-                    {repo.stargazersCount.toLocaleString()}
+                    {repo.stars.toLocaleString()}
                   </Badge>
                   <Badge variant="outline">
-                    <Fork className="h-3 w-3 mr-1" aria-hidden="true" />
-                    {repo.forksCount.toLocaleString()}
+                    <GitFork className="h-3 w-3 mr-1" aria-hidden="true" />
+                    {repo.forks.toLocaleString()}
                   </Badge>
                 </>
               )}
@@ -323,14 +323,14 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                       <Star className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                       <div>
                         <dt className="text-muted-foreground">Stars</dt>
-                        <dd className="text-foreground">{repo.stargazersCount.toLocaleString()}</dd>
+                        <dd className="text-foreground">{repo.stars.toLocaleString()}</dd>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Fork className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      <GitFork className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                       <div>
                         <dt className="text-muted-foreground">Forks</dt>
-                        <dd className="text-foreground">{repo.forksCount.toLocaleString()}</dd>
+                        <dd className="text-foreground">{repo.forks.toLocaleString()}</dd>
                       </div>
                     </div>
                     {repo.isFork && (

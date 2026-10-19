@@ -1,4 +1,4 @@
-import { GitHubProfile, GitHubRepository } from '@/types';
+import { GitHubProfile, NormalizedRepository } from '@/types';
 
 export interface GitHubRawProfile {
   login: string;
@@ -49,7 +49,7 @@ export function normalizeProfile(raw: GitHubRawProfile): GitHubProfile {
   };
 }
 
-export function normalizeRepository(raw: GitHubRawRepository): GitHubRepository {
+export function normalizeRepository(raw: GitHubRawRepository): NormalizedRepository {
   return {
     id: raw.id,
     name: raw.name,
@@ -59,9 +59,9 @@ export function normalizeRepository(raw: GitHubRawRepository): GitHubRepository 
     homepage: raw.homepage,
     language: raw.language,
     topics: raw.topics ?? [],
-    stargazersCount: raw.stargazers_count,
-    forksCount: raw.forks_count,
-    openIssuesCount: raw.open_issues_count,
+    stars: raw.stargazers_count,
+    forks: raw.forks_count,
+    openIssues: raw.open_issues_count,
     isFork: raw.fork,
     isArchived: raw.archived,
     isPrivate: raw.private,

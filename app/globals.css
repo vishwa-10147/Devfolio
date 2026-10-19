@@ -112,11 +112,11 @@
   }
 
   .text-body {
-    @apply text-body text-foreground/80 leading-relaxed;
+    @apply text-base text-foreground/80 leading-relaxed;
   }
 
   .text-muted {
-    @apply text-body-sm text-muted-foreground;
+    @apply text-sm text-muted-foreground;
   }
 
   .link {

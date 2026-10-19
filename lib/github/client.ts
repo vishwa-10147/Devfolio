@@ -14,6 +14,7 @@ import {
   GitHubRateLimitError,
   GitHubNetworkError,
   GitHubNotFoundError,
+  isNotFoundError,
 } from './errors';
 
 const GITHUB_API_BASE = 'https://api.github.com';

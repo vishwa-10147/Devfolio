@@ -1,14 +1,14 @@
 'use client';
 
 import { cn, getLanguageColor } from '@/lib/utils';
-import { Card, Badge } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Github, ExternalLink, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import type { NormalizedRepository, CuratedProject } from '@/types';
 
 interface ProjectCardProps {
   repository: NormalizedRepository;
-  curated?: CuratedProject;
+  curated?: Partial<CuratedProject>;
   featured?: boolean;
 }
 
@@ -17,8 +17,11 @@ export function ProjectCard({ repository, curated, featured = false }: ProjectCa
   const displayTitle = curated?.displayTitle || name;
   const summary = curated?.summary || description;
 
+  const baseStyles = 'rounded-lg border border-border bg-surface p-6 transition-all duration-300';
+  const elevatedStyles = 'rounded-xl bg-surface-elevated shadow-elevation-1 hover:border-accent/40 hover:shadow-elevation-3';
+
   return (
-    <Card variant="elevated" className={cn('relative overflow-hidden', featured && 'ring-1 ring-accent/30')}>
+    <div className={cn(baseStyles, elevatedStyles, 'relative overflow-hidden', featured && 'ring-1 ring-accent/30')}>
       {featured && (
         <div className="absolute top-4 right-4 z-10">
           <Badge variant="success">Featured</Badge>
@@ -32,7 +35,7 @@ export function ProjectCard({ repository, curated, featured = false }: ProjectCa
             alt={`Screenshot of ${displayTitle}`}
             className="absolute inset-0 w-full h-full object-cover opacity-20"
             aria-hidden="true"
-          )
+          />
         )}
         <div className="absolute inset-0 flex items-end p-6">
           <div className="w-full">
@@ -102,6 +105,6 @@ export function ProjectCard({ repository, curated, featured = false }: ProjectCa
           </Link>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }

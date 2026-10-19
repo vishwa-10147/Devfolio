@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { RepositoryCard } from './repository-card';
-import { RepositoryFiltersPanel } from './repository-filters';
+import { RepositoryFiltersPanel, type RepositoryFilters } from './repository-filters';
 import { cn } from '@/lib/utils';
 import type { NormalizedRepository } from '@/types';
 
@@ -14,15 +14,15 @@ interface RepositoryListProps {
 }
 
 export function RepositoryList({ repositories, featuredRepos, loading, error }: RepositoryListProps) {
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<RepositoryFilters>({
     search: '',
-    languages: [] as string[],
-    topics: [] as string[],
+    languages: [],
+    topics: [],
     featuredOnly: false,
     excludeForks: true,
     excludeArchived: true,
-    sortBy: 'updated' as const,
-    sortOrder: 'desc' as const,
+    sortBy: 'updated',
+    sortOrder: 'desc',
   });
 
   const filteredAndSorted = useMemo(() => {
@@ -66,8 +66,8 @@ export function RepositoryList({ repositories, featuredRepos, loading, error }: 
 
       switch (filters.sortBy) {
         case 'stars':
-          aVal = a.stargazersCount;
-          bVal = b.stargazersCount;
+          aVal = a.stars;
+          bVal = b.stars;
           break;
         case 'name':
           aVal = a.name.toLowerCase();

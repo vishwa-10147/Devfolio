@@ -5,11 +5,11 @@ import { Button } from '@/components/ui';
 import { fetchProfile, fetchRepositories } from '@/lib/github';
 import { ArrowRight, Github, Star, ExternalLink, Code, Brain, Shield, Server } from 'lucide-react';
 import Link from 'next/link';
-import type { NormalizedRepository } from '@/types';
+import type { NormalizedRepository, CuratedProject } from '@/types';
 
 const FEATURED_REPOS = ['devfolio', 'ai-research-toolkit', 'secure-api-gateway'];
 
-const curatedProjects = {
+const curatedProjects: Record<string, Partial<CuratedProject>> = {
   devfolio: {
     displayTitle: 'Devfolio',
     summary: 'A GitHub-powered professional developer portfolio built with Next.js, React, TypeScript, and Tailwind CSS.',
@@ -133,28 +133,24 @@ export default async function HomePage() {
               I build production-grade systems with a focus on security, scalability, and developer experience.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Button size="lg" asChild>
-                <Link href="/projects">
+              <Link href="/projects" className="btn-primary inline-flex items-center gap-2 text-base px-6 py-3">
                   View Projects
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="https://github.com" target="_blank" rel="noopener noreferrer">
+                <Link href="https://github.com" target="_blank" rel="noopener noreferrer" className="btn-outline inline-flex items-center gap-2 text-base px-6 py-3">
                   <Github className="h-4 w-4 mr-2" aria-hidden="true" />
                   GitHub
                 </Link>
-              </Button>
-              <Button variant="ghost" size="lg" asChild>
-                <Link href="/about">About Me</Link>
-              </Button>
+                <Link href="/about" className="btn-ghost inline-flex items-center gap-2 text-base px-6 py-3">
+                  About Me
+                </Link>
             </div>
 
             {profile && (
               <div className="mt-12 flex flex-wrap items-center gap-8 text-body-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Star className="h-4 w-4 text-accent" aria-hidden="true" />
-                  <span>{repositories.reduce((sum, r) => sum + r.stargazersCount, 0).toLocaleString()} total stars</span>
+                  <span>{repositories.reduce((sum, r) => sum + r.stars, 0).toLocaleString()} total stars</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Github className="h-4 w-4" aria-hidden="true" />
@@ -181,12 +177,10 @@ export default async function HomePage() {
                   Curated case studies for selected high-value projects.
                 </p>
               </div>
-              <Button variant="ghost" asChild>
-                <Link href="/projects">
+              <Link href="/projects" className="btn-ghost inline-flex items-center gap-2">
                   All Projects
                   <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
                 </Link>
-              </Button>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {featuredRepos.map((repo) => {
@@ -235,9 +229,9 @@ export default async function HomePage() {
             ))}
           </div>
           <div className="mt-8 text-center">
-            <Button variant="outline" asChild>
-              <Link href="/skills">View All Skills</Link>
-            </Button>
+            <Link href="/skills" className="btn-outline inline-flex items-center gap-2">
+              View All Skills
+            </Link>
           </div>
         </section>
 
@@ -251,17 +245,13 @@ export default async function HomePage() {
               I&apos;m always open to discussing new opportunities, interesting problems, or potential collaborations.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" asChild>
-                <Link href="mailto:hello@example.com">
-                  Get in Touch
-                  <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-                  Connect on LinkedIn
-                </Link>
-              </Button>
+              <Link href="mailto:hello@example.com" className="btn-primary inline-flex items-center gap-2 text-base px-6 py-3">
+                Get in Touch
+                <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
+              </Link>
+              <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="btn-outline inline-flex items-center gap-2 text-base px-6 py-3">
+                Connect on LinkedIn
+              </Link>
             </div>
           </div>
         </section>

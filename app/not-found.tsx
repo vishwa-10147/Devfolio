@@ -22,18 +22,14 @@ export default function NotFound() {
             Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have been moved or doesn&apos;t exist.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button asChild>
-              <Link href="/">
-                <Home className="h-4 w-4 mr-2" aria-hidden="true" />
-                Go Home
-              </Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/projects">
-                <Search className="h-4 w-4 mr-2" aria-hidden="true" />
-                Browse Projects
-              </Link>
-            </Button>
+            <Link href="/" className="btn-primary inline-flex items-center gap-2">
+              <Home className="h-4 w-4" aria-hidden="true" />
+              Go Home
+            </Link>
+            <Link href="/projects" className="btn-outline inline-flex items-center gap-2">
+              <Search className="h-4 w-4" aria-hidden="true" />
+              Browse Projects
+            </Link>
           </div>
         </div>
       </main>

@@ -1,14 +1,15 @@
-import { forwardRef, type ButtonHTMLAttributes } from 'react';
+import { forwardRef, cloneElement, isValidElement, type ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
+  asChild?: boolean;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', loading, disabled, children, ...props }, ref) => {
+  ({ className, variant = 'primary', size = 'md', loading, disabled, asChild = false, children, ...props }, ref) => {
     const baseStyles = 'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
 
     const variants = {
@@ -24,10 +25,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       lg: 'rounded-lg px-6 py-3 text-base',
     };
 
+    const combinedClassName = cn(baseStyles, variants[variant], sizes[size], className);
+
+    if (asChild && isValidElement(children)) {
+      return cloneElement(children as React.ReactElement<{ className?: string }>, {
+        className: cn(combinedClassName, (children as React.ReactElement<{ className?: string }>).props.className),
+        ...props,
+      });
+    }
+
     return (
       <button
         ref={ref}
-        className={cn(baseStyles, variants[variant], sizes[size], className)}
+        className={combinedClassName}
         disabled={disabled || loading}
         {...props}
       >

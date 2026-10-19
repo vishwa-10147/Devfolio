@@ -2,7 +2,7 @@
 
 import { cn, formatRelativeTime, getLanguageColor } from '@/lib/utils';
 import { Card, Badge } from '@/components/ui';
-import { Github, Star, Fork, ExternalLink } from 'lucide-react';
+import { Github, Star, GitFork, ExternalLink } from 'lucide-react';
 import type { NormalizedRepository } from '@/types';
 
 interface RepositoryCardProps {
@@ -102,7 +102,7 @@ export function RepositoryCard({ repository, featured = false, onClick }: Reposi
               {stars.toLocaleString()}
             </span>
             <span className="flex items-center gap-1.5" aria-label={`${forks} forks`}>
-              <Fork className="h-3.5 w-3.5" aria-hidden="true" />
+              <GitFork className="h-3.5 w-3.5" aria-hidden="true" />
               {forks.toLocaleString()}
             </span>
             <time dateTime={updatedAt} aria-label={`Last updated ${formatRelativeTime(updatedAt)}`}>

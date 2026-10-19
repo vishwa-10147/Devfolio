@@ -6,7 +6,7 @@ import { Button, Input, Badge } from '@/components/ui';
 import { Search, Filter, X, ChevronDown, Loader2 } from 'lucide-react';
 import type { NormalizedRepository } from '@/types';
 
-interface RepositoryFilters {
+export interface RepositoryFilters {
   search: string;
   languages: string[];
   topics: string[];
