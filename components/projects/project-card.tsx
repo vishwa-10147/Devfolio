@@ -1,7 +1,7 @@
 'use client';
 
 import { cn, getLanguageColor } from '@/lib/utils';
-import { Card, Badge } from '@/components/ui';
+import { Card, Badge } from '@/components/ui/card';
 import { Github, ExternalLink, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import type { NormalizedRepository, CuratedProject } from '@/types';
