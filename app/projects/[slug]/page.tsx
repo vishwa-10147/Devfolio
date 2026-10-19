@@ -10,7 +10,7 @@ import type { NormalizedRepository, CuratedProject } from '@/types';
 
 const curatedProjects: Record<string, CuratedProject> = {
   devfolio: {
-    repository: 'vishwa47/devfolio',
+    repository: 'vishwa-10147/Devfolio',
     featured: true,
     displayTitle: 'Devfolio',
     summary: 'A GitHub-powered professional developer portfolio built with Next.js, React, TypeScript, and Tailwind CSS.',
@@ -19,9 +19,8 @@ const curatedProjects: Record<string, CuratedProject> = {
     architecture: 'Next.js 14 App Router with Server Components for data fetching. GitHub REST API with server-side caching and revalidation. Tailwind CSS for styling with a dark-first design system. TypeScript for type safety. Deployed on Vercel with environment-based configuration.',
     technologies: ['Next.js 14', 'React 18', 'TypeScript', 'Tailwind CSS', 'GitHub REST API', 'Vercel'],
     verifiedResults: 'Successfully fetches and displays 50+ repositories with search, filtering, and sorting. Sub-100ms cached response times. WCAG 2.2 AA compliant. Lighthouse scores: Performance 95, Accessibility 100, Best Practices 100, SEO 100.',
-    screenshots: ['/images/devfolio-home.png', '/images/devfolio-projects.png'],
     demoUrl: '/',
-    documentationUrl: 'https://github.com/vishwa47/devfolio#readme',
+    documentationUrl: 'https://github.com/vishwa-10147/Devfolio#readme',
     status: 'Active development',
     futureWork: 'Add blog section with MDX support. Implement project analytics dashboard. Add multi-language support. Create admin panel for content management.',
   },
@@ -35,7 +34,6 @@ const curatedProjects: Record<string, CuratedProject> = {
     architecture: 'Python package with modular design. MLflow for experiment tracking. Hydra for configuration management. Docker for reproducible environments. pytest for testing. GitHub Actions for CI/CD.',
     technologies: ['Python 3.11', 'PyTorch', 'MLflow', 'Hydra', 'Docker', 'pytest', 'GitHub Actions'],
     verifiedResults: 'Used in 3 published papers. Reduced experiment setup time from hours to minutes. 100% reproducibility across team members. 50+ GitHub stars.',
-    screenshots: ['/images/ai-toolkit-cli.png', '/images/ai-toolkit-dashboard.png'],
     demoUrl: 'https://github.com/vishwa47/ai-research-toolkit',
     documentationUrl: 'https://github.com/vishwa47/ai-research-toolkit#readme',
     status: 'Maintenance mode',
@@ -51,7 +49,6 @@ const curatedProjects: Record<string, CuratedProject> = {
     architecture: 'Go-based gateway with middleware chain. OAuth2/OIDC authentication. Token-based rate limiting with Redis. OpenTelemetry for distributed tracing. Prometheus metrics. Kubernetes deployment with Helm charts.',
     technologies: ['Go 1.21', 'Kubernetes', 'Prometheus', 'Grafana', 'Redis', 'OAuth2/OIDC', 'OpenTelemetry', 'Helm'],
     verifiedResults: 'Handles 100K+ requests/day in production. P99 latency < 50ms. Zero security incidents in 18 months. Used by 3 teams across 15 microservices.',
-    screenshots: ['/images/gateway-architecture.png', '/images/gateway-dashboard.png'],
     demoUrl: 'https://github.com/vishwa47/secure-api-gateway',
     documentationUrl: 'https://github.com/vishwa47/secure-api-gateway#readme',
     status: 'Active development',
@@ -65,7 +62,7 @@ interface ProjectDetailPageProps {
 
 export async function generateMetadata({ params }: ProjectDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const curated = curatedProjects[slug];
+  const curated = curatedProjects[slug.toLowerCase()];
 
   if (!curated) {
     return { title: 'Project Not Found' };
@@ -84,13 +81,13 @@ export async function generateMetadata({ params }: ProjectDetailPageProps): Prom
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { slug } = await params;
-  const curated = curatedProjects[slug];
+  const curated = curatedProjects[slug.toLowerCase()];
 
   if (!curated) {
     notFound();
   }
 
-  const username = process.env.GITHUB_USERNAME || 'vishwa47';
+  const username = process.env.GITHUB_USERNAME || 'vishwa-10147';
   const repo = await fetchRepository(username, slug);
 
   return (

@@ -110,7 +110,7 @@ async function getData() {
 
 export default async function HomePage() {
   const { profile, repositories } = await getData();
-  const featuredRepos = repositories.filter((r) => FEATURED_REPOS.includes(r.name));
+  const featuredRepos = repositories.filter((r) => FEATURED_REPOS.includes(r.name.toLowerCase()));
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -137,7 +137,7 @@ export default async function HomePage() {
                   View Projects
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
-                <Link href="https://github.com" target="_blank" rel="noopener noreferrer" className="btn-outline inline-flex items-center gap-2 text-base px-6 py-3">
+                <Link href="https://github.com/vishwa-10147" target="_blank" rel="noopener noreferrer" className="btn-outline inline-flex items-center gap-2 text-base px-6 py-3">
                   <Github className="h-4 w-4 mr-2" aria-hidden="true" />
                   GitHub
                 </Link>
@@ -184,7 +184,7 @@ export default async function HomePage() {
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {featuredRepos.map((repo) => {
-                const curated = curatedProjects[repo.name as keyof typeof curatedProjects];
+                const curated = curatedProjects[repo.name.toLowerCase() as keyof typeof curatedProjects];
                 return <ProjectCard key={repo.id} repository={repo} curated={curated} featured />;
               })}
             </div>

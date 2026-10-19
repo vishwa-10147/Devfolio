@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { Github, Linkedin, Twitter, Mail, Heart, Code } from 'lucide-react';
 
 const socialLinks = [
-  { name: 'GitHub', href: 'https://github.com', icon: Github, label: 'GitHub' },
+  { name: 'GitHub', href: 'https://github.com/vishwa-10147', icon: Github, label: 'GitHub' },
   { name: 'LinkedIn', href: 'https://www.linkedin.com/in/vishwa-kokkireni-7081152ba/', icon: Linkedin, label: 'LinkedIn' },
   { name: 'Twitter', href: 'https://twitter.com', icon: Twitter, label: 'Twitter' },
   { name: 'Email', href: 'mailto:vishwakokkireni@gmail.com', icon: Mail, label: 'Email' },

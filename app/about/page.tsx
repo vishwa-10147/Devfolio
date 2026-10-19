@@ -115,7 +115,7 @@ export default function AboutPage() {
                   <h2 className="text-heading-lg font-semibold text-foreground">Software Engineer</h2>
                   <p className="mt-1 text-body text-accent">AI/ML • Security • Full-Stack</p>
                   <div className="mt-6 flex items-center justify-center gap-4">
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-accent transition-colors" aria-label="GitHub">
+                    <a href="https://github.com/vishwa-10147" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-accent transition-colors" aria-label="GitHub">
                       <Github className="h-5 w-5" />
                     </a>
                     <a href="https://www.linkedin.com/in/vishwa-kokkireni-7081152ba/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-accent transition-colors" aria-label="LinkedIn">

@@ -82,11 +82,29 @@ function isCacheValid(entry: CacheEntry<unknown>): boolean {
   return Date.now() - entry.timestamp < CACHE_DURATION;
 }
 
+// Set once GitHub rejects GITHUB_TOKEN (expired/revoked), so later requests
+// go out unauthenticated instead of failing every time.
+let tokenRejected = false;
+
 async function fetchWithTimeout(
   url: string,
   options: RequestInit,
   timeoutMs: number = 10000
 ): Promise<Response> {
+  const response = await fetchOnce(url, options, timeoutMs);
+
+  const headers = { ...(options.headers as Record<string, string> | undefined) };
+  if (response.status === 401 && headers.Authorization) {
+    tokenRejected = true;
+    console.warn('GITHUB_TOKEN was rejected by GitHub (expired or revoked?); retrying without authentication.');
+    delete headers.Authorization;
+    return fetchOnce(url, { ...options, headers }, timeoutMs);
+  }
+
+  return response;
+}
+
+async function fetchOnce(url: string, options: RequestInit, timeoutMs: number): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -114,14 +132,25 @@ async function fetchWithTimeout(
 
 function getAuthHeaders(): HeadersInit {
   const token = process.env.GITHUB_TOKEN;
-  if (token) {
+  if (token && !tokenRejected) {
     return { Authorization: `Bearer ${token}` };
   }
   return {};
 }
 
+function isRateLimited(response: Response): boolean {
+  return (
+    (response.status === 403 || response.status === 429) &&
+    (response.headers.get('X-RateLimit-Remaining') === '0' || response.headers.has('Retry-After'))
+  );
+}
+
 async function handleResponse<T>(response: Response): Promise<T> {
-  if (response.status === 401 || response.status === 403) {
+  if (response.status === 401) {
+    throw new GitHubApiError('GitHub API authentication failed', 401, 'UNAUTHORIZED');
+  }
+
+  if (isRateLimited(response)) {
     const retryAfter = response.headers.get('Retry-After');
     const resetTime = response.headers.get('X-RateLimit-Reset');
     let waitSeconds = 60;
