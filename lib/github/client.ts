@@ -76,7 +76,7 @@ function getAuthHeaders(): HeadersInit {
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
-  if (response.status === 403) {
+  if (response.status === 401 || response.status === 403) {
     const retryAfter = response.headers.get('Retry-After');
     const resetTime = response.headers.get('X-RateLimit-Reset');
     let waitSeconds = 60;
@@ -106,7 +106,11 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json();
 }
 
-export async function fetchProfile(username: string): Promise<GitHubProfile> {
+export async function fetchProfile(username: string): Promise<GitHubProfile | null> {
+  if (!username) {
+    return null;
+  }
+
   const cacheKey = getCacheKey(username, 'profile');
   const cached = profileCache.get(cacheKey);
 
@@ -114,19 +118,30 @@ export async function fetchProfile(username: string): Promise<GitHubProfile> {
     return cached.data;
   }
 
-  const response = await fetchWithTimeout(
-    `${GITHUB_API_BASE}/users/${username}`,
-    { headers: getAuthHeaders() }
-  );
+  try {
+    const response = await fetchWithTimeout(
+      `${GITHUB_API_BASE}/users/${username}`,
+      { headers: getAuthHeaders() }
+    );
 
-  const rawProfile = await handleResponse<GitHubRawProfile>(response);
-  const profile = normalizeProfile(rawProfile);
+    const rawProfile = await handleResponse<GitHubRawProfile>(response);
+    const profile = normalizeProfile(rawProfile);
 
-  profileCache.set(cacheKey, { data: profile, timestamp: Date.now() });
-  return profile;
+    profileCache.set(cacheKey, { data: profile, timestamp: Date.now() });
+    return profile;
+  } catch (error) {
+    if (isNotFoundError(error)) {
+      return null;
+    }
+    throw error;
+  }
 }
 
 export async function fetchRepositories(username: string): Promise<NormalizedRepository[]> {
+  if (!username) {
+    return [];
+  }
+
   const cacheKey = getCacheKey(username, 'repositories');
   const cached = repositoriesCache.get(cacheKey);
 
@@ -134,35 +149,42 @@ export async function fetchRepositories(username: string): Promise<NormalizedRep
     return cached.data;
   }
 
-  const allRepos: NormalizedRepository[] = [];
-  let page = 1;
-  let hasMore = true;
+  try {
+    const allRepos: NormalizedRepository[] = [];
+    let page = 1;
+    let hasMore = true;
 
-  while (hasMore) {
-    const response = await fetchWithTimeout(
-      `${GITHUB_API_BASE}/users/${username}/repos?per_page=${DEFAULT_PER_PAGE}&page=${page}&sort=updated&direction=desc&type=public`,
-      { headers: getAuthHeaders() }
-    );
+    while (hasMore) {
+      const response = await fetchWithTimeout(
+        `${GITHUB_API_BASE}/users/${username}/repos?per_page=${DEFAULT_PER_PAGE}&page=${page}&sort=updated&direction=desc&type=public`,
+        { headers: getAuthHeaders() }
+      );
 
-    const rawRepos = await handleResponse<GitHubRawRepository[]>(response);
+      const rawRepos = await handleResponse<GitHubRawRepository[]>(response);
 
-    if (rawRepos.length === 0) {
-      hasMore = false;
-      break;
+      if (rawRepos.length === 0) {
+        hasMore = false;
+        break;
+      }
+
+      const normalized = rawRepos.map(normalizeRepository);
+      allRepos.push(...normalized);
+
+      if (rawRepos.length < DEFAULT_PER_PAGE) {
+        hasMore = false;
+      } else {
+        page++;
+      }
     }
 
-    const normalized = rawRepos.map(normalizeRepository);
-    allRepos.push(...normalized);
-
-    if (rawRepos.length < DEFAULT_PER_PAGE) {
-      hasMore = false;
-    } else {
-      page++;
+    repositoriesCache.set(cacheKey, { data: allRepos, timestamp: Date.now() });
+    return allRepos;
+  } catch (error) {
+    if (isNotFoundError(error)) {
+      return [];
     }
+    throw error;
   }
-
-  repositoriesCache.set(cacheKey, { data: allRepos, timestamp: Date.now() });
-  return allRepos;
 }
 
 export async function fetchRepository(username: string, repoName: string): Promise<NormalizedRepository | null> {

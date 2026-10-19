@@ -118,13 +118,13 @@ export default function AboutPage() {
                     <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-accent transition-colors" aria-label="GitHub">
                       <Github className="h-5 w-5" />
                     </a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-accent transition-colors" aria-label="LinkedIn">
+                    <a href="https://www.linkedin.com/in/vishwa-kokkireni-7081152ba/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-accent transition-colors" aria-label="LinkedIn">
                       <Linkedin className="h-5 w-5" />
                     </a>
                     <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-accent transition-colors" aria-label="Twitter">
                       <Twitter className="h-5 w-5" />
                     </a>
-                    <a href="mailto:hello@example.com" className="text-muted-foreground hover:text-accent transition-colors" aria-label="Email">
+                    <a href="mailto:vishwakokkireni@gmail.com" className="text-muted-foreground hover:text-accent transition-colors" aria-label="Email">
                       <Mail className="h-5 w-5" />
                     </a>
                   </div>
@@ -141,7 +141,7 @@ export default function AboutPage() {
                   </div>
                   <div className="flex items-center gap-3 text-body-sm">
                     <Mail className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                    <span className="text-foreground">hello@example.com</span>
+                    <span className="text-foreground">vishwakokkireni@gmail.com</span>
                   </div>
                 </div>
               </Card>

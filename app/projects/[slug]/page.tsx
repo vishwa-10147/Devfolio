@@ -90,7 +90,8 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
     notFound();
   }
 
-  const repo = await fetchRepository('vishwa47', slug);
+  const username = process.env.GITHUB_USERNAME || 'vishwa47';
+  const repo = await fetchRepository(username, slug);
 
   return (
     <div className="min-h-screen flex flex-col">

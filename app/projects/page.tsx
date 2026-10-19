@@ -55,6 +55,11 @@ export default async function ProjectsPage() {
                 Showing {repositories.length} public repositories for {profile.name || profile.login}
               </p>
             )}
+            {!profile && !error && (
+              <p className="mt-4 text-body-sm text-muted-foreground">
+                Configure <code>GITHUB_USERNAME</code> in your environment to display your GitHub repositories.
+              </p>
+            )}
           </header>
 
           <RepositoryList

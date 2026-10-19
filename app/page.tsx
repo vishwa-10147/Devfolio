@@ -245,11 +245,11 @@ export default async function HomePage() {
               I&apos;m always open to discussing new opportunities, interesting problems, or potential collaborations.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="mailto:hello@example.com" className="btn-primary inline-flex items-center gap-2 text-base px-6 py-3">
+              <Link href="mailto:vishwakokkireni@gmail.com" className="btn-primary inline-flex items-center gap-2 text-base px-6 py-3">
                 Get in Touch
                 <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
               </Link>
-              <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="btn-outline inline-flex items-center gap-2 text-base px-6 py-3">
+              <Link href="https://www.linkedin.com/in/vishwa-kokkireni-7081152ba/" target="_blank" rel="noopener noreferrer" className="btn-outline inline-flex items-center gap-2 text-base px-6 py-3">
                 Connect on LinkedIn
               </Link>
             </div>

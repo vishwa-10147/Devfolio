@@ -25,9 +25,9 @@ const navigation = [
 
 const socialLinks = [
   { name: 'GitHub', href: 'https://github.com', icon: Github, label: 'GitHub' },
-  { name: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin, label: 'LinkedIn' },
+  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/vishwa-kokkireni-7081152ba/', icon: Linkedin, label: 'LinkedIn' },
   { name: 'Twitter', href: 'https://twitter.com', icon: Twitter, label: 'Twitter' },
-  { name: 'Email', href: 'mailto:hello@example.com', icon: Mail, label: 'Email' },
+  { name: 'Email', href: 'mailto:vishwakokkireni@gmail.com', icon: Mail, label: 'Email' },
 ];
 
 export function Header() {

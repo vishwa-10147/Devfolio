@@ -16,7 +16,10 @@ const jetbrainsMono = JetBrains_Mono({
   preload: true,
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Devfolio | Building Intelligent Systems',
     template: '%s | Devfolio',
@@ -52,13 +55,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://devfolio.example.com',
+    url: siteUrl,
     siteName: 'Devfolio',
     title: 'Devfolio | Building Intelligent Systems',
     description: 'Professional portfolio of a software engineer focused on AI/ML, GenAI, cybersecurity, full-stack engineering, and research.',
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image.svg',
         width: 1200,
         height: 630,
         alt: 'Devfolio Portfolio Preview',
@@ -69,13 +72,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Devfolio | Building Intelligent Systems',
     description: 'Professional portfolio of a software engineer focused on AI/ML, GenAI, cybersecurity, full-stack engineering, and research.',
-    images: ['/og-image.png'],
+    images: ['/og-image.svg'],
     creator: '@github',
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/apple-touch-icon.svg',
   },
   manifest: '/site.webmanifest',
 };
