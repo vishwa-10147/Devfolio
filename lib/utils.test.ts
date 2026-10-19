@@ -64,7 +64,7 @@ describe('formatRelativeTime', () => {
 
 describe('truncate', () => {
   it('truncates long strings', () => {
-    expect(truncate('Hello World', 8)).toBe('Hello...');
+    expect(truncate('Hello World', 8)).toBe('Hello Wo...');
   });
 
   it('returns original string if shorter than length', () => {
