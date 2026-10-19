@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark-first design system - near-black surfaces with violet/cyan accents */
+    --background: 225 25% 4%;
+    --foreground: 220 20% 95%;
+    --surface: 225 20% 6%;
+    --surface-elevated: 225 18% 8%;
+    --border: 225 15% 15%;
+    --muted: 225 15% 10%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 265 85% 65%;
+    --accent-foreground: 225 25% 4%;
+    --accent-soft: 265 60% 20%;
+    --primary: 190 90% 55%;
+    --primary-foreground: 225 25% 4%;
+    --secondary: 225 15% 12%;
+    --secondary-foreground: 220 20% 85%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 220 20% 95%;
+    --ring: 265 85% 65%;
+    --radius: 0.5rem;
+  }
+
+  .light {
+    --background: 220 30% 98%;
+    --foreground: 225 25% 8%;
+    --surface: 0 0% 100%;
+    --surface-elevated: 220 30% 96%;
+    --border: 220 20% 88%;
+    --muted: 220 20% 94%;
+    --muted-foreground: 220 15% 45%;
+    --accent: 265 80% 55%;
+    --accent-foreground: 220 30% 98%;
+    --accent-soft: 265 50% 92%;
+    --primary: 190 85% 45%;
+    --primary-foreground: 220 30% 98%;
+    --secondary: 220 20% 92%;
+    --secondary-foreground: 225 25% 15%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 220 30% 98%;
+    --ring: 265 80% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  ::selection {
+    @apply bg-accent/30 text-accent-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-main {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section {
+    @apply py-16 sm:py-24 lg:py-32;
+  }
+
+  .section-sm {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+
+  .heading-display {
+    @apply font-sans font-medium tracking-tight text-foreground;
+  }
+
+  .heading-section {
+    @apply font-sans font-semibold tracking-tight text-foreground;
+  }
+
+  .text-body {
+    @apply text-body text-foreground/80 leading-relaxed;
+  }
+
+  .text-muted {
+    @apply text-body-sm text-muted-foreground;
+  }
+
+  .link {
+    @apply text-accent hover:text-accent/80 transition-colors duration-200 underline-offset-2 hover:underline;
+  }
+
+  .card-base {
+    @apply rounded-lg border border-border bg-surface p-6 transition-all duration-300 hover:border-accent/30 hover:shadow-elevation-2;
+  }
+
+  .card-elevated {
+    @apply rounded-xl border border-border bg-surface-elevated p-6 shadow-elevation-1 transition-all duration-300 hover:border-accent/40 hover:shadow-elevation-3;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-primary-foreground hover:bg-primary/90 shadow-elevation-1 hover:shadow-elevation-2;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border;
+  }
+
+  .btn-outline {
+    @apply btn border border-border bg-transparent hover:bg-secondary;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent hover:bg-secondary;
+  }
+
+  .input-base {
+    @apply w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors duration-200;
+  }
+
+  .badge-primary {
+    @apply badge bg-accent-soft text-accent;
+  }
+
+  .badge-secondary {
+    @apply badge bg-secondary text-secondary-foreground;
+  }
+
+  .badge-outline {
+    @apply badge border border-border bg-transparent;
+  }
+}
