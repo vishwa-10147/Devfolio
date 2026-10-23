@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { PROFILE } from '@/lib/portfolio';
 import { Github, Linkedin, Mail, Heart, Code } from 'lucide-react';
 
 const socialLinks = [
@@ -14,7 +15,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-surface/50" role="contentinfo">
       <div className="container-main py-12 lg:py-16">
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-4">
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 font-semibold text-heading-sm text-foreground" aria-label="Devfolio Home">
               <span className="text-accent">█</span>
@@ -62,6 +63,22 @@ export function Footer() {
             </nav>
           </div>
 
+          <div>
+            <h3 className="text-heading-sm font-semibold text-foreground">Contact</h3>
+            <ul className="mt-4 space-y-3">
+              <li>
+                <a href={`mailto:${PROFILE.email}`} className="text-body-sm text-muted-foreground transition-colors hover:text-foreground break-all">
+                  {PROFILE.email}
+                </a>
+              </li>
+              <li>
+                <a href={`mailto:${PROFILE.altEmail}`} className="text-body-sm text-muted-foreground transition-colors hover:text-foreground break-all">
+                  {PROFILE.altEmail}
+                </a>
+                <span className="ml-1 text-caption text-muted-foreground">(alternative)</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">

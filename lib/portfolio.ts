@@ -10,6 +10,7 @@ export const PROFILE = {
   githubUrl: 'https://github.com/vishwa-10147',
   linkedinUrl: 'https://www.linkedin.com/in/vishwa-kokkireni-7081152ba/',
   email: 'vishwakokkireni@gmail.com',
+  altEmail: 'vishwa9821@gmail.com',
   avatarUrl: 'https://avatars.githubusercontent.com/u/210499489?v=4',
   tagline: 'I build systems that watch networks, flag what\'s wrong, and stay up while doing it.',
   summary:

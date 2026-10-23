@@ -7,7 +7,7 @@ import { Calendar, Mail, Github, Linkedin, GraduationCap, BookOpen, Briefcase, C
 
 // Content sourced from the GitHub profile README (github.com/vishwa-10147).
 
-const { githubUrl: GITHUB_URL, linkedinUrl: LINKEDIN_URL, email: EMAIL, avatarUrl: AVATAR_URL } = PROFILE;
+const { githubUrl: GITHUB_URL, linkedinUrl: LINKEDIN_URL, email: EMAIL, altEmail: ALT_EMAIL, avatarUrl: AVATAR_URL } = PROFILE;
 
 const currentWork = [
   'Building edge AI security appliances and ML-based intrusion detection for IoT and lab networks',
@@ -180,6 +180,11 @@ export default function AboutPage() {
                   <div className="flex items-center gap-3 text-body-sm">
                     <Mail className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                     <a href={`mailto:${EMAIL}`} className="text-foreground hover:text-accent transition-colors break-all">{EMAIL}</a>
+                  </div>
+                  <div className="flex items-center gap-3 text-body-sm">
+                    <Mail className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <a href={`mailto:${ALT_EMAIL}`} className="text-foreground hover:text-accent transition-colors break-all">{ALT_EMAIL}</a>
+                    <span className="text-caption text-muted-foreground">(alternative)</span>
                   </div>
                 </div>
               </Card>

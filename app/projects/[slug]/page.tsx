@@ -10,8 +10,6 @@ import { curatedProjects, getCuratedProject } from '@/lib/portfolio';
 
 // Static export: pre-render one page per case study, using the repo's real name
 // so it matches the links built from GitHub data.
-export const dynamicParams = false;
-
 export function generateStaticParams() {
   return Object.values(curatedProjects).map((project) => ({
     slug: project.repository.split('/')[1],
