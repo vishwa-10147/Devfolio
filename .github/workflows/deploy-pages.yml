@@ -3,9 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-  # Rebuild daily so new repos, stars and descriptions from GitHub show up.
+  # Check GitHub for repo changes every 15 minutes; the build only runs when
+  # something changed (repo created/deleted/renamed, description, stars, push).
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '*/15 * * * *'
   # Allow manual runs from the Actions tab.
   workflow_dispatch:
 
@@ -19,7 +20,48 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.decide.outputs.changed }}
+      fingerprint: ${{ steps.fingerprint.outputs.value }}
+    steps:
+      - name: Fingerprint public GitHub data
+        id: fingerprint
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+          {
+            gh api --paginate "users/$OWNER/repos?type=public&per_page=100" \
+              --jq '.[] | [.name, .description, .homepage, .language, (.topics | join(",")), .stargazers_count, .forks_count, .archived, .fork, .pushed_at] | @json' | sort
+            gh api "users/$OWNER" --jq '[.name, .bio, .followers] | @json'
+          } > github-data.txt
+          echo "value=$(sha256sum github-data.txt | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - name: Look up last deployed fingerprint
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: github-data.txt
+          key: github-data-${{ steps.fingerprint.outputs.value }}
+          lookup-only: true
+
+      - name: Decide whether to build
+        id: decide
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ] || [ "${{ steps.cache.outputs.cache-hit }}" != "true" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Building: event=${{ github.event_name }}, data changed=${{ steps.cache.outputs.cache-hit != 'true' }}"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No GitHub changes since the last deploy; skipping build."
+          fi
+
   build:
+    needs: check
+    if: needs.check.outputs.changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -57,7 +99,7 @@ jobs:
           path: ./out
 
   deploy:
-    needs: build
+    needs: [check, build]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -66,3 +108,13 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Remember this fingerprint so the next scheduled check can skip the build.
+      - name: Record deployed fingerprint
+        run: echo "${{ needs.check.outputs.fingerprint }}" > github-data.txt
+
+      - name: Save fingerprint
+        uses: actions/cache/save@v4
+        with:
+          path: github-data.txt
+          key: github-data-${{ needs.check.outputs.fingerprint }}

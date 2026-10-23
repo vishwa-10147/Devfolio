@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Header, Footer } from '@/components/layout';
-import { ProjectCard } from '@/components/projects';
+import { LiveFeaturedProjects, LiveRepoStats } from '@/components/home';
 import { Button } from '@/components/ui';
 import { fetchProfile, fetchRepositories } from '@/lib/github';
 import { ArrowRight, Github, Star, ExternalLink, Code, Brain, Shield, Server } from 'lucide-react';
@@ -77,22 +77,7 @@ export default async function HomePage() {
                 </Link>
             </div>
 
-            {profile && (
-              <div className="mt-12 flex flex-wrap items-center gap-8 text-body-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Star className="h-4 w-4 text-accent" aria-hidden="true" />
-                  <span>{repositories.reduce((sum, r) => sum + r.stars, 0).toLocaleString()} total stars</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Github className="h-4 w-4" aria-hidden="true" />
-                  <span>{repositories.length} public repos</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                  <span>{profile.followers} followers</span>
-                </div>
-              </div>
-            )}
+            {profile && <LiveRepoStats initialRepositories={repositories} followers={profile.followers} />}
           </div>
         </section>
 
@@ -113,12 +98,7 @@ export default async function HomePage() {
                   <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
                 </Link>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {featuredRepos.map((repo) => {
-                const curated = getCuratedProject(repo.name);
-                return <ProjectCard key={repo.id} repository={repo} curated={curated} featured />;
-              })}
-            </div>
+            <LiveFeaturedProjects initialRepositories={repositories} />
           </section>
         )}
 

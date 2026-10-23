@@ -1,12 +1,10 @@
 import { Metadata } from 'next';
 import { Header, Footer } from '@/components/layout';
-import { RepositoryList } from '@/components/projects';
+import { LiveRepositoryList } from '@/components/projects';
 import { fetchProfile, fetchRepositories } from '@/lib/github';
-import { PROFILE, getCuratedProject } from '@/lib/portfolio';
+import { withCuratedDescriptions } from '@/lib/github/live';
+import { FEATURED_REPOS } from '@/lib/portfolio';
 import type { NormalizedRepository } from '@/types';
-
-// Curated featured repositories - update with actual repo names
-const FEATURED_REPOS = ['devfolio', 'ai-research-toolkit', 'secure-api-gateway'];
 
 export const metadata: Metadata = {
   title: 'Projects',
@@ -26,11 +24,7 @@ async function getData() {
       fetchRepositories(username),
     ]);
     // Many repos have no GitHub description; fall back to the curated summary.
-    const withDescriptions = repositories.map((repo) => ({
-      ...repo,
-      description: repo.description || getCuratedProject(repo.name)?.summary || null,
-    }));
-    return { profile, repositories: withDescriptions, error: null };
+    return { profile, repositories: withCuratedDescriptions(repositories), error: null };
   } catch (error) {
     console.error('Failed to fetch GitHub data:', error);
     return {
@@ -56,11 +50,6 @@ export default async function ProjectsPage() {
             <p className="mt-4 text-body-lg text-muted-foreground max-w-2xl">
               Explore my public GitHub repositories. Use the filters to find projects by language, topic, or sort by stars and recent activity.
             </p>
-            {profile && (
-              <p className="mt-4 text-body-sm text-muted-foreground">
-                Showing {repositories.length} public repositories for {PROFILE.name}
-              </p>
-            )}
             {!profile && !error && (
               <p className="mt-4 text-body-sm text-muted-foreground">
                 Configure <code>GITHUB_USERNAME</code> in your environment to display your GitHub repositories.
@@ -68,10 +57,10 @@ export default async function ProjectsPage() {
             )}
           </header>
 
-          <RepositoryList
-            repositories={repositories}
+          <LiveRepositoryList
+            initialRepositories={repositories}
             featuredRepos={FEATURED_REPOS}
-            error={error}
+            buildError={error}
           />
         </section>
       </main>

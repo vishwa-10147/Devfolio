@@ -29,7 +29,7 @@ export function RepositoryList({ repositories, featuredRepos, loading, error }: 
     let result = repositories;
 
     if (filters.featuredOnly) {
-      result = result.filter((repo) => featuredRepos.includes(repo.name));
+      result = result.filter((repo) => featuredRepos.includes(repo.name.toLowerCase()));
     }
 
     if (filters.excludeForks) {
@@ -162,7 +162,7 @@ export function RepositoryList({ repositories, featuredRepos, loading, error }: 
           <RepositoryCard
             key={repo.id}
             repository={repo}
-            featured={featuredRepos.includes(repo.name)}
+            featured={featuredRepos.includes(repo.name.toLowerCase())}
           />
         ))}
       </div>
