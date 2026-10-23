@@ -6,7 +6,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white)
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge)](https://github.com/vishwa-kokkireni/devfolio/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
@@ -48,7 +48,7 @@ Devfolio is a modern, accessible developer portfolio built with **Next.js 14 App
 | **Data** | GitHub REST API (server-side, cached) |
 | **Testing** | Vitest, React Testing Library |
 | **Quality** | ESLint, Prettier, TypeScript strict |
-| **Deploy** | Vercel (recommended) |
+| **Deploy** | GitHub Pages (static export via GitHub Actions) |
 
 ---
 
@@ -164,23 +164,18 @@ npm run build         # Production build
 
 ## 📦 Deployment
 
-### Vercel (Recommended)
+### GitHub Pages (current setup)
 
-1. Push to GitHub
-2. Import in [Vercel](https://vercel.com/new)
-3. Add Environment Variables:
-   - `GITHUB_USERNAME` (required)
-   - `GITHUB_TOKEN` (optional, for higher rate limits)
-   - `NEXT_PUBLIC_SITE_URL` (your production domain)
-4. Deploy
+The site is a static export (`output: 'export'` in `next.config.js`) deployed by
+[`.github/workflows/deploy-pages.yml`](./.github/workflows/deploy-pages.yml):
 
-### Other Platforms
+- Runs on every push to `main`, daily at 03:00 UTC (to pick up GitHub changes), and on demand.
+- Uses the workflow's built-in `GITHUB_TOKEN`; no secrets to configure.
+- Sets the URL subpath automatically (`/Devfolio` for a project site, none for a `<user>.github.io` repo).
 
-```bash
-# Build standalone output
-npm run build
-# Output in .next/standalone/ for Docker/serverless
-```
+One-time setup: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+Build locally with `npm run build`; the static site is written to `out/`.
 
 ---
 

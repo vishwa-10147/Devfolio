@@ -1,5 +1,8 @@
 import { MetadataRoute } from 'next';
 
+// Required for `output: 'export'`.
+export const dynamic = 'force-static';
+
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
@@ -7,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/_next/', '/static/', '/*.json$'],
+      disallow: ['/_next/'],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

@@ -6,7 +6,17 @@ import { fetchRepository } from '@/lib/github';
 import { ArrowLeft, Github, ExternalLink, Calendar, Star, GitFork, Tag, FileCode } from 'lucide-react';
 import Link from 'next/link';
 import { cn, formatDate } from '@/lib/utils';
-import { getCuratedProject } from '@/lib/portfolio';
+import { curatedProjects, getCuratedProject } from '@/lib/portfolio';
+
+// Static export: pre-render one page per case study, using the repo's real name
+// so it matches the links built from GitHub data.
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return Object.values(curatedProjects).map((project) => ({
+    slug: project.repository.split('/')[1],
+  }));
+}
 
 interface ProjectDetailPageProps {
   params: Promise<{ slug: string }>;

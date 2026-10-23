@@ -17,6 +17,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+// Static asset URLs need the GitHub Pages subpath; next/link adds it automatically, metadata does not.
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -62,7 +64,7 @@ export const metadata: Metadata = {
     description: 'Vishwa Kokkireni: Computer Science Engineering student building security-focused AI/ML and backend systems.',
     images: [
       {
-        url: '/og-image.svg',
+        url: `${basePath}/og-image.svg`,
         width: 1200,
         height: 630,
         alt: 'Devfolio Portfolio Preview',
@@ -73,14 +75,14 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Vishwa Kokkireni | Security, AI/ML & Backend',
     description: 'Vishwa Kokkireni: Computer Science Engineering student building security-focused AI/ML and backend systems.',
-    images: ['/og-image.svg'],
+    images: [`${basePath}/og-image.svg`],
   },
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/apple-touch-icon.svg',
+    icon: `${basePath}/favicon.svg`,
+    shortcut: `${basePath}/favicon.svg`,
+    apple: `${basePath}/apple-touch-icon.svg`,
   },
-  manifest: '/site.webmanifest',
+  manifest: `${basePath}/site.webmanifest`,
 };
 
 export const viewport: Viewport = {

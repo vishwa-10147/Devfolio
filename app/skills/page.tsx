@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { Header, Footer } from '@/components/layout';
 import { Brain, Shield, Code, Server, Layers, Terminal } from 'lucide-react';
 import { PROFILE, getCuratedProject, skillGroups } from '@/lib/portfolio';
@@ -17,9 +18,7 @@ export const metadata: Metadata = {
   description: 'Skills across security & networking, AI/ML, backend, frontend and DevOps, each linked to the projects that use them.',
 };
 
-function repoHref(repoName: string): string {
-  return getCuratedProject(repoName) ? `/projects/${repoName}` : `${PROFILE.githubUrl}/${repoName}`;
-}
+const chipClass = 'px-2 py-0.5 rounded-full bg-accent-soft text-accent hover:underline';
 
 function repoLabel(repoName: string): string {
   return getCuratedProject(repoName)?.displayTitle || repoName;
@@ -68,16 +67,17 @@ export default function SkillsPage() {
                         {skill.usedIn && (
                           <div className="flex flex-wrap items-center gap-1.5 text-caption text-muted-foreground">
                             <span>Used in</span>
-                            {skill.usedIn.map((repo) => (
-                              <a
-                                key={repo}
-                                href={repoHref(repo)}
-                                className="px-2 py-0.5 rounded-full bg-accent-soft text-accent hover:underline"
-                                {...(getCuratedProject(repo) ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
-                              >
-                                {repoLabel(repo)}
-                              </a>
-                            ))}
+                            {skill.usedIn.map((repo) =>
+                              getCuratedProject(repo) ? (
+                                <Link key={repo} href={`/projects/${repo}`} className={chipClass}>
+                                  {repoLabel(repo)}
+                                </Link>
+                              ) : (
+                                <a key={repo} href={`${PROFILE.githubUrl}/${repo}`} target="_blank" rel="noopener noreferrer" className={chipClass}>
+                                  {repoLabel(repo)}
+                                </a>
+                              )
+                            )}
                           </div>
                         )}
                       </div>

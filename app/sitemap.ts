@@ -1,4 +1,8 @@
 import { MetadataRoute } from 'next';
+import { curatedProjects } from '@/lib/portfolio';
+
+// Required for `output: 'export'`.
+export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
@@ -28,5 +32,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
+    ...Object.values(curatedProjects).map((project) => ({
+      url: `${baseUrl}/projects/${project.repository.split('/')[1]}/`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
   ];
 }
