@@ -262,8 +262,12 @@ export default function AboutPage() {
                 </h2>
                 <div className="mt-6 space-y-4">
                   <Card variant="default">
-                    <h3 className="text-heading-md font-semibold text-foreground">Computer Science Engineering</h3>
-                    <p className="mt-1 text-body text-accent">Undergraduate · In progress</p>
+                    <h3 className="text-heading-md font-semibold text-foreground">Computer Science and Engineering</h3>
+                    <p className="mt-1 text-body text-accent">Mahatma Gandhi Institute of Technology (A), Hyderabad</p>
+                    <p className="mt-1 text-body-sm text-muted-foreground">Undergraduate · In progress</p>
+                    <p className="mt-1 text-body-sm text-muted-foreground">
+                      Research on autonomous-vehicle sensor fusion (SCI → CAMSF → CPL) under the guidance of Dr. P. Poornima, Department of CSE
+                    </p>
                     <p className="mt-1 text-body-sm text-muted-foreground">
                       Coursework: Data Structures & Algorithms, Operating Systems, Computer Networks, OOP, System Design
                     </p>

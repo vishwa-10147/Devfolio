@@ -60,8 +60,8 @@ export default async function HomePage() {
             </h1>
             <p className="mt-6 text-body-lg text-muted-foreground max-w-2xl">
               I&apos;m {PROFILE.name}, a Computer Science Engineering student working where cybersecurity, machine
-              learning, and backend engineering meet: edge security appliances, ML intrusion detection, and
-              AI-assisted exam proctoring, built end-to-end with tests, CI and Docker.
+              learning, and backend engineering meet: ML intrusion detection, sensor-fusion research for autonomous
+              vehicles, and tools that show what neural networks actually compute.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link href="/projects" className="btn-primary inline-flex items-center gap-2 text-base px-6 py-3">
@@ -90,7 +90,7 @@ export default async function HomePage() {
                   Featured Projects
                 </h2>
                 <p className="mt-1 text-body text-muted-foreground">
-                  Case studies of the systems I've built, from edge security appliances to exam proctoring.
+                  Case studies of selected work, from IoT intrusion detection to autonomous-vehicle localization research.
                 </p>
               </div>
               <Link href="/projects" className="btn-ghost inline-flex items-center gap-2">

@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
 import { Card, Badge } from '@/components/ui';
-import { fetchRepository } from '@/lib/github';
+import { fetchRepositories } from '@/lib/github';
 import { ArrowLeft, Github, ExternalLink, Calendar, Star, GitFork, Tag, FileCode } from 'lucide-react';
 import Link from 'next/link';
 import { cn, formatDate } from '@/lib/utils';
@@ -48,7 +48,10 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   }
 
   const [owner, repoName] = curated.repository.split('/');
-  const repo = await fetchRepository(owner, repoName);
+  // Reuse the cached repo list (one API call per build, shared by every page)
+  // and render without repo stats rather than fail the build if GitHub is unavailable.
+  const repos = await fetchRepositories(owner).catch(() => []);
+  const repo = repos.find((r) => r.name.toLowerCase() === repoName.toLowerCase()) ?? null;
 
   return (
     <div className="min-h-screen flex flex-col">
