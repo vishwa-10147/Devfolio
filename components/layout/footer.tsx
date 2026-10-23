@@ -22,7 +22,7 @@ export function Footer() {
               Devfolio
             </Link>
             <p className="mt-4 max-w-xs text-body text-muted-foreground">
-              Building intelligent systems. A software engineer focused on AI/ML, GenAI, cybersecurity, full-stack engineering, and research.
+              Vishwa Kokkireni — Computer Science Engineering student building security-focused AI/ML and backend systems.
             </p>
             <div className="mt-6 flex items-center gap-4">
               {socialLinks.map((social) => (
@@ -82,7 +82,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
           <p className="text-body-sm text-muted-foreground text-center md:text-left">
-            © {currentYear} Devfolio. Built with Next.js, React, TypeScript, and Tailwind CSS.
+            © {currentYear} Vishwa Kokkireni. Built with Next.js, React, TypeScript, and Tailwind CSS.
           </p>
           <p className="flex items-center gap-1.5 text-body-sm text-muted-foreground text-center md:text-right">
             Made with

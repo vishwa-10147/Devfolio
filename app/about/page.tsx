@@ -2,14 +2,12 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { Header, Footer } from '@/components/layout';
 import { Card } from '@/components/ui';
+import { PROFILE } from '@/lib/portfolio';
 import { Calendar, Mail, Github, Linkedin, GraduationCap, BookOpen, Briefcase, Code2, Shield, Brain, Server, TestTube2, ExternalLink } from 'lucide-react';
 
 // Content sourced from the GitHub profile README (github.com/vishwa-10147).
 
-const GITHUB_URL = 'https://github.com/vishwa-10147';
-const LINKEDIN_URL = 'https://www.linkedin.com/in/vishwa-kokkireni-7081152ba/';
-const EMAIL = 'vishwakokkireni@gmail.com';
-const AVATAR_URL = 'https://avatars.githubusercontent.com/u/210499489?v=4';
+const { githubUrl: GITHUB_URL, linkedinUrl: LINKEDIN_URL, email: EMAIL, avatarUrl: AVATAR_URL } = PROFILE;
 
 const currentWork = [
   'Building edge AI security appliances and ML-based intrusion detection for IoT and lab networks',

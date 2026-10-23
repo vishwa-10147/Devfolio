@@ -21,15 +21,16 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Devfolio | Building Intelligent Systems',
+    default: 'Vishwa Kokkireni | Security, AI/ML & Backend',
     template: '%s | Devfolio',
   },
-  description: 'Professional portfolio of a software engineer focused on AI/ML, GenAI, cybersecurity, full-stack engineering, and research. Featuring GitHub-powered project showcase.',
+  description: 'Vishwa Kokkireni: Computer Science Engineering student building security-focused AI/ML and backend systems.',
   keywords: [
     'software engineer',
     'portfolio',
     'AI/ML',
-    'GenAI',
+    'cybersecurity engineering',
+    'intrusion detection',
     'cybersecurity',
     'full-stack',
     'React',
@@ -38,8 +39,8 @@ export const metadata: Metadata = {
     'Python',
     'GitHub',
   ],
-  authors: [{ name: 'Devfolio Owner' }],
-  creator: 'Devfolio Owner',
+  authors: [{ name: 'Vishwa Kokkireni', url: 'https://github.com/vishwa-10147' }],
+  creator: 'Vishwa Kokkireni',
   publisher: 'Devfolio',
   robots: {
     index: true,
@@ -57,8 +58,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: siteUrl,
     siteName: 'Devfolio',
-    title: 'Devfolio | Building Intelligent Systems',
-    description: 'Professional portfolio of a software engineer focused on AI/ML, GenAI, cybersecurity, full-stack engineering, and research.',
+    title: 'Vishwa Kokkireni | Security, AI/ML & Backend',
+    description: 'Vishwa Kokkireni: Computer Science Engineering student building security-focused AI/ML and backend systems.',
     images: [
       {
         url: '/og-image.svg',
@@ -70,10 +71,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Devfolio | Building Intelligent Systems',
-    description: 'Professional portfolio of a software engineer focused on AI/ML, GenAI, cybersecurity, full-stack engineering, and research.',
+    title: 'Vishwa Kokkireni | Security, AI/ML & Backend',
+    description: 'Vishwa Kokkireni: Computer Science Engineering student building security-focused AI/ML and backend systems.',
     images: ['/og-image.svg'],
-    creator: '@github',
   },
   icons: {
     icon: '/favicon.svg',

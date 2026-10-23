@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Header, Footer } from '@/components/layout';
 import { RepositoryList } from '@/components/projects';
 import { fetchProfile, fetchRepositories } from '@/lib/github';
+import { PROFILE, getCuratedProject } from '@/lib/portfolio';
 import type { NormalizedRepository } from '@/types';
 
 // Curated featured repositories - update with actual repo names
@@ -24,7 +25,12 @@ async function getData() {
       fetchProfile(username),
       fetchRepositories(username),
     ]);
-    return { profile, repositories, error: null };
+    // Many repos have no GitHub description; fall back to the curated summary.
+    const withDescriptions = repositories.map((repo) => ({
+      ...repo,
+      description: repo.description || getCuratedProject(repo.name)?.summary || null,
+    }));
+    return { profile, repositories: withDescriptions, error: null };
   } catch (error) {
     console.error('Failed to fetch GitHub data:', error);
     return {
@@ -52,7 +58,7 @@ export default async function ProjectsPage() {
             </p>
             {profile && (
               <p className="mt-4 text-body-sm text-muted-foreground">
-                Showing {repositories.length} public repositories for {profile.name || profile.login}
+                Showing {repositories.length} public repositories for {PROFILE.name}
               </p>
             )}
             {!profile && !error && (
