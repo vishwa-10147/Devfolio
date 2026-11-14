@@ -1,6 +1,6 @@
 import type { NormalizedRepository } from '@/types';
 import { GitHubRawRepository, normalizeRepository } from './normalize';
-import { getCuratedProject } from '@/lib/portfolio';
+import { getCuratedProject, isHiddenRepo } from '@/lib/portfolio';
 
 // Browser-side fetch of the current public repos, so the static site reflects
 // repos created or deleted since the last build. Unauthenticated: GitHub allows
@@ -9,9 +9,12 @@ import { getCuratedProject } from '@/lib/portfolio';
 const PER_PAGE = 100;
 const MAX_PAGES = 5;
 
-/** Fill in descriptions GitHub doesn't have from the curated case studies. */
+/**
+ * Drop hidden repos (profile README, empty repos) and fill in descriptions
+ * GitHub doesn't have from the curated case studies.
+ */
 export function withCuratedDescriptions(repos: NormalizedRepository[]): NormalizedRepository[] {
-  return repos.map((repo) => ({
+  return repos.filter((repo) => !isHiddenRepo(repo.name)).map((repo) => ({
     ...repo,
     description: repo.description || getCuratedProject(repo.name)?.summary || null,
   }));

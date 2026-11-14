@@ -2,7 +2,9 @@
 
 import { cn, formatRelativeTime, getLanguageColor } from '@/lib/utils';
 import { Card, Badge } from '@/components/ui';
-import { Github, Star, GitFork, ExternalLink } from 'lucide-react';
+import { Github, Star, GitFork, ExternalLink, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { getCuratedProject } from '@/lib/portfolio';
 import type { NormalizedRepository } from '@/types';
 
 interface RepositoryCardProps {
@@ -13,6 +15,7 @@ interface RepositoryCardProps {
 
 export function RepositoryCard({ repository, featured = false, onClick }: RepositoryCardProps) {
   const { name, description, htmlUrl, homepage, language, topics, stars, forks, updatedAt, isFork, isArchived } = repository;
+  const curated = getCuratedProject(name);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (onClick && (e.key === 'Enter' || e.key === ' ')) {
@@ -109,6 +112,18 @@ export function RepositoryCard({ repository, featured = false, onClick }: Reposi
               Updated {formatRelativeTime(updatedAt)}
             </time>
           </div>
+
+          {curated && (
+            <Link
+              href={`/projects/${name}`}
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+              aria-label={`View case study for ${curated.displayTitle || name}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              Case Study
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center gap-2 shrink-0">

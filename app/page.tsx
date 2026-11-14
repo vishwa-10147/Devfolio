@@ -3,6 +3,7 @@ import { Header, Footer } from '@/components/layout';
 import { LiveFeaturedProjects, LiveRepoStats } from '@/components/home';
 import { Button } from '@/components/ui';
 import { fetchProfile, fetchRepositories } from '@/lib/github';
+import { withCuratedDescriptions } from '@/lib/github/live';
 import { ArrowRight, Github, Star, ExternalLink, Code, Brain, Shield, Server } from 'lucide-react';
 import Link from 'next/link';
 import type { NormalizedRepository } from '@/types';
@@ -30,7 +31,7 @@ async function getData() {
       fetchProfile(username),
       fetchRepositories(username),
     ]);
-    return { profile, repositories };
+    return { profile, repositories: withCuratedDescriptions(repositories) };
   } catch {
     return { profile: null, repositories: [] as NormalizedRepository[] };
   }
