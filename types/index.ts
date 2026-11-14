@@ -60,7 +60,8 @@ export interface CuratedProject {
   summary: string;
   problem: string;
   roleAndContribution: string;
-  architecture?: string;
+  /** One bullet per component or design decision. */
+  architecture?: string | string[];
   technologies: string[];
   verifiedResults?: string;
   screenshots?: string[];

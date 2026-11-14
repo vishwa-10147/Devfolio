@@ -183,14 +183,22 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                   <h2 id="architecture-heading" className="text-heading-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                     Architecture & Design Decisions
                   </h2>
-                  <p className="text-body text-muted-foreground">{curated.architecture}</p>
+                  {Array.isArray(curated.architecture) ? (
+                    <ul className="space-y-3 text-body text-muted-foreground list-disc pl-5 marker:text-accent">
+                      {curated.architecture.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-body text-muted-foreground">{curated.architecture}</p>
+                  )}
                 </section>
               )}
 
               {curated.verifiedResults && (
                 <section className="card-elevated p-8" aria-labelledby="results-heading">
                   <h2 id="results-heading" className="text-heading-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                    Verified Results
+                    Results & Validation
                   </h2>
                   <p className="text-body text-muted-foreground">{curated.verifiedResults}</p>
                 </section>
@@ -199,7 +207,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
               {curated.futureWork && (
                 <section className="card-elevated p-8" aria-labelledby="future-heading">
                   <h2 id="future-heading" className="text-heading-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                    Future Work
+                    Next Steps
                   </h2>
                   <p className="text-body text-muted-foreground">{curated.futureWork}</p>
                 </section>
@@ -310,18 +318,12 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
               <Card variant="elevated" className="p-6 sticky top-24">
                 <h3 className="text-heading-sm font-semibold text-foreground mb-4">Status</h3>
-                <div className="space-y-3">
+                <dl className="space-y-3">
                   <div>
                     <dt className="text-body-sm text-muted-foreground">Current Status</dt>
                     <dd className="text-body text-foreground">{curated.status || 'Unknown'}</dd>
                   </div>
-                  {curated.futureWork && (
-                    <div>
-                      <dt className="text-body-sm text-muted-foreground">Planned Improvements</dt>
-                      <dd className="text-body text-muted-foreground">{curated.futureWork}</dd>
-                    </div>
-                  )}
-                </div>
+                </dl>
               </Card>
             </aside>
           </div>
