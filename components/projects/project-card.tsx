@@ -1,8 +1,8 @@
 'use client';
 
-import { cn, getLanguageColor } from '@/lib/utils';
+import { cn, getLanguageDotColor } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Github, ExternalLink, ArrowRight } from 'lucide-react';
+import { Star, GitFork, ExternalLink, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import type { NormalizedRepository, CuratedProject } from '@/types';
 
@@ -13,7 +13,8 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ repository, curated, featured = false }: ProjectCardProps) {
-  const { name, description, htmlUrl, homepage, language, topics, stars, forks, updatedAt } = repository;
+  const { name, description, htmlUrl, homepage, language, topics, stars, forks, updatedAt, pushedAt } = repository;
+  const modifiedAt = pushedAt || updatedAt;
   const displayTitle = curated?.displayTitle || name;
   const summary = curated?.summary || description;
 
@@ -40,7 +41,12 @@ export function ProjectCard({ repository, curated, featured = false }: ProjectCa
         <div className="absolute inset-0 flex items-end p-6">
           <div className="w-full">
             {language && (
-              <span className={cn('inline-block mb-3', getLanguageColor(language))}>
+              <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-surface/80 px-2.5 py-0.5 text-xs font-medium text-muted-foreground backdrop-blur-sm">
+                <span
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: getLanguageDotColor(language) }}
+                  aria-hidden="true"
+                />
                 {language}
               </span>
             )}
@@ -68,15 +74,15 @@ export function ProjectCard({ repository, curated, featured = false }: ProjectCa
 
         <div className="flex flex-wrap items-center gap-4 mb-6 text-body-sm text-muted-foreground">
           <span className="flex items-center gap-1.5" aria-label={`${stars} stars`}>
-            <Github className="h-3.5 w-3.5" aria-hidden="true" />
+            <Star className="h-3.5 w-3.5" aria-hidden="true" />
             {stars.toLocaleString()}
           </span>
           <span className="flex items-center gap-1.5" aria-label={`${forks} forks`}>
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            <GitFork className="h-3.5 w-3.5" aria-hidden="true" />
             {forks.toLocaleString()}
           </span>
-          <time dateTime={updatedAt} aria-label={`Last updated`}>
-            Updated {new Date(updatedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+          <time dateTime={modifiedAt} aria-label="Last modified">
+            Modified {new Date(modifiedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
           </time>
         </div>
 

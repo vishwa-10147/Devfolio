@@ -6,6 +6,7 @@ import { fetchProfile, fetchRepositories } from '@/lib/github';
 import { withCuratedDescriptions } from '@/lib/github/live';
 import { ArrowRight, Github, Star, ExternalLink, Code, Brain, Shield, Server } from 'lucide-react';
 import Link from 'next/link';
+import { orderByPinnedThenModified } from '@/lib/utils';
 import type { NormalizedRepository } from '@/types';
 import { FEATURED_REPOS, PROFILE, getCuratedProject, skillGroups } from '@/lib/portfolio';
 
@@ -39,9 +40,10 @@ async function getData() {
 
 export default async function HomePage() {
   const { profile, repositories } = await getData();
-  const featuredRepos = FEATURED_REPOS
-    .map((name) => repositories.find((r) => r.name.toLowerCase() === name))
-    .filter((r): r is NormalizedRepository => r !== undefined);
+  const featuredRepos = orderByPinnedThenModified<NormalizedRepository>(
+    repositories.filter((r) => FEATURED_REPOS.includes(r.name.toLowerCase())),
+    FEATURED_REPOS
+  );
 
   return (
     <div className="min-h-screen flex flex-col">

@@ -80,6 +80,61 @@ export function getLanguageColor(language: string | null): string {
   return colors[language] || 'bg-muted';
 }
 
+/**
+ * GitHub-style language colors, softened slightly for the dark theme.
+ * Used for a small dot next to a neutral language label.
+ */
+const LANGUAGE_DOT_COLORS: Record<string, string> = {
+  TypeScript: '#3b82c4',
+  JavaScript: '#e5c84a',
+  Python: '#4b8bbe',
+  'Jupyter Notebook': '#e07b39',
+  Rust: '#d08a5e',
+  Go: '#4fb8d4',
+  Java: '#c4884a',
+  'C++': '#e0538a',
+  C: '#7d8a99',
+  'C#': '#3f9b5e',
+  Swift: '#f07a5a',
+  Kotlin: '#9b7fe0',
+  Ruby: '#c9504c',
+  PHP: '#7b84b8',
+  HTML: '#e06c4a',
+  CSS: '#8b6cc4',
+  Shell: '#7fbf5a',
+  Dockerfile: '#4b8bbe',
+  Vue: '#4fb58a',
+  Svelte: '#f06a3c',
+  Astro: '#e0663c',
+  MDX: '#e0a84a',
+  ShaderLab: '#5a6f8c',
+};
+
+/** Hex color for a language's dot; a neutral grey for unknown languages. */
+export function getLanguageDotColor(language: string | null): string {
+  return (language && LANGUAGE_DOT_COLORS[language]) || '#8b949e';
+}
+
+/** When a repo was last modified: its last code push, falling back to its last update. */
+export function lastModified(repo: { pushedAt: string | null; updatedAt: string }): number {
+  return new Date(repo.pushedAt || repo.updatedAt).getTime();
+}
+
+/**
+ * Pinned repos first, then everything else; each group newest change first.
+ * `pinned` holds lowercase repository names.
+ */
+export function orderByPinnedThenModified<T extends { name: string; pushedAt: string | null; updatedAt: string }>(
+  repos: T[],
+  pinned: string[]
+): T[] {
+  return [...repos].sort((a, b) => {
+    const pa = pinned.includes(a.name.toLowerCase()) ? 0 : 1;
+    const pb = pinned.includes(b.name.toLowerCase()) ? 0 : 1;
+    return pa - pb || lastModified(b) - lastModified(a);
+  });
+}
+
 export function debounce<T extends (...args: unknown[]) => unknown>(
   fn: T,
   delay: number

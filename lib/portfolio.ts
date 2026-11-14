@@ -23,7 +23,7 @@ const repoUrl = (name: string) => `${PROFILE.githubUrl}/${name}`;
 export const curatedProjects: Record<string, CuratedProject> = {
   examsentiinel: {
     repository: 'vishwa-10147/ExamSentiinel',
-    featured: false,
+    featured: true,
     displayTitle: 'ExamSentinel',
     summary:
       'A self-hostable platform for proctored exams and coding assessments, in which AI surfaces integrity signals and human reviewers make every final decision.',
@@ -48,7 +48,7 @@ export const curatedProjects: Record<string, CuratedProject> = {
   },
   sentineledgeai: {
     repository: 'vishwa-10147/SentinelEdgeAI',
-    featured: false,
+    featured: true,
     displayTitle: 'SentinelEdgeAI',
     summary:
       'An on-premises, AI-driven edge security appliance for real-time network monitoring, anomaly detection and automated response.',
@@ -115,7 +115,7 @@ export const curatedProjects: Record<string, CuratedProject> = {
   },
   sentinelids: {
     repository: 'vishwa-10147/SentinelIDS',
-    featured: false,
+    featured: true,
     displayTitle: 'SentinelIDS',
     summary:
       'Machine-learning intrusion detection for IoT and virtualized lab networks, with fusion scoring, a SOC dashboard and PDF incident reports.',
@@ -137,7 +137,7 @@ export const curatedProjects: Record<string, CuratedProject> = {
   },
   foodorder: {
     repository: 'vishwa-10147/FoodOrder',
-    featured: false,
+    featured: true,
     displayTitle: 'FoodOrder',
     summary:
       'A real-time restaurant platform: customers order and track from their table while staff run tables, menu and kitchen flow from one live dashboard.',
@@ -775,8 +775,17 @@ export function isHiddenRepo(repoName: string): boolean {
   return HIDDEN_REPOS.includes(repoName.toLowerCase());
 }
 
-/** Repos shown on the home page, in order (lowercase names). */
+/**
+ * Projects on the resume (lowercase names). They are featured on the home page
+ * and pinned to the top of the projects list; each group is ordered by the
+ * date the repo was last modified.
+ */
 export const FEATURED_REPOS = [
+  'sentineledgeai',
+  'examsentiinel',
+  'sentinelids',
+  'foodorder',
+  'progresspulse',
   'iot-ids-ml-dashboard',
   'neurovision',
   'cpl',
@@ -784,7 +793,6 @@ export const FEATURED_REPOS = [
   'camsf',
   'sci',
   'epaper',
-  'progresspulse',
 ];
 
 export function getCuratedProject(repoName: string): CuratedProject | undefined {

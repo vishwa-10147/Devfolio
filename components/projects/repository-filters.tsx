@@ -214,7 +214,7 @@ export function RepositoryFiltersPanel({
                 className="input-base flex-1 max-w-xs"
                 aria-label="Sort repositories by"
               >
-                <option value="updated">Recently updated</option>
+                <option value="updated">Last modified</option>
                 <option value="stars">Most stars</option>
                 <option value="name">Name (A-Z)</option>
                 <option value="created">Oldest first</option>

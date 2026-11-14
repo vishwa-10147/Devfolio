@@ -5,6 +5,8 @@ import {
   truncate,
   slugify,
   getLanguageColor,
+  getLanguageDotColor,
+  orderByPinnedThenModified,
   classNames,
 } from '@/lib/utils';
 
@@ -121,5 +123,41 @@ describe('classNames', () => {
 
   it('handles empty input', () => {
     expect(classNames()).toBe('');
+  });
+});
+describe('getLanguageDotColor', () => {
+  it('returns a hex color for known languages and grey otherwise', () => {
+    expect(getLanguageDotColor('Python')).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(getLanguageDotColor('UnknownLanguage')).toBe('#8b949e');
+    expect(getLanguageDotColor(null)).toBe('#8b949e');
+  });
+});
+
+describe('orderByPinnedThenModified', () => {
+  const repo = (name: string, pushedAt: string | null, updatedAt = '2026-11-14T00:00:00Z') => ({
+    name,
+    pushedAt,
+    updatedAt,
+  });
+
+  it('puts pinned repos first, each group newest push first', () => {
+    const ordered = orderByPinnedThenModified(
+      [
+        repo('Old', '2026-01-01T00:00:00Z'),
+        repo('PinnedOld', '2026-02-01T00:00:00Z'),
+        repo('New', '2026-10-01T00:00:00Z'),
+        repo('PinnedNew', '2026-09-01T00:00:00Z'),
+      ],
+      ['pinnedold', 'pinnednew']
+    );
+    expect(ordered.map((r) => r.name)).toEqual(['PinnedNew', 'PinnedOld', 'New', 'Old']);
+  });
+
+  it('uses the last push, not metadata edits, and falls back to updatedAt', () => {
+    const ordered = orderByPinnedThenModified(
+      [repo('EditedToday', '2026-01-01T00:00:00Z', '2026-11-14T00:00:00Z'), repo('NeverPushed', null, '2026-06-01T00:00:00Z')],
+      []
+    );
+    expect(ordered.map((r) => r.name)).toEqual(['NeverPushed', 'EditedToday']);
   });
 });
