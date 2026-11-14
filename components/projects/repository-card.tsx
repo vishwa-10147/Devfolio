@@ -1,8 +1,10 @@
 'use client';
 
-import { cn, formatRelativeTime, getLanguageColor } from '@/lib/utils';
+import { cn, formatRelativeTime, getLanguageDotColor } from '@/lib/utils';
 import { Card, Badge } from '@/components/ui';
-import { Github, Star, GitFork, ExternalLink } from 'lucide-react';
+import { Github, Star, GitFork, ExternalLink, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { getCuratedProject } from '@/lib/portfolio';
 import type { NormalizedRepository } from '@/types';
 
 interface RepositoryCardProps {
@@ -12,7 +14,9 @@ interface RepositoryCardProps {
 }
 
 export function RepositoryCard({ repository, featured = false, onClick }: RepositoryCardProps) {
-  const { name, description, htmlUrl, homepage, language, topics, stars, forks, updatedAt, isFork, isArchived } = repository;
+  const { name, description, htmlUrl, homepage, language, topics, stars, forks, updatedAt, pushedAt, isFork, isArchived } = repository;
+  const modifiedAt = pushedAt || updatedAt;
+  const curated = getCuratedProject(name);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (onClick && (e.key === 'Enter' || e.key === ' ')) {
@@ -72,10 +76,12 @@ export function RepositoryCard({ repository, featured = false, onClick }: Reposi
 
           <div className="flex flex-wrap items-center gap-3 mb-4">
             {language && (
-              <span
-                className={cn('inline-flex items-center gap-1.5 text-xs font-medium', getLanguageColor(language))}
-              >
-                <span className="relative flex h-2 w-2 rounded-full" aria-hidden="true" />
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                <span
+                  className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-inset ring-white/10"
+                  style={{ backgroundColor: getLanguageDotColor(language) }}
+                  aria-hidden="true"
+                />
                 {language}
               </span>
             )}
@@ -105,10 +111,22 @@ export function RepositoryCard({ repository, featured = false, onClick }: Reposi
               <GitFork className="h-3.5 w-3.5" aria-hidden="true" />
               {forks.toLocaleString()}
             </span>
-            <time dateTime={updatedAt} aria-label={`Last updated ${formatRelativeTime(updatedAt)}`}>
-              Updated {formatRelativeTime(updatedAt)}
+            <time dateTime={modifiedAt} aria-label={`Last modified ${formatRelativeTime(modifiedAt)}`}>
+              Modified {formatRelativeTime(modifiedAt)}
             </time>
           </div>
+
+          {curated && (
+            <Link
+              href={`/projects/${name}`}
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+              aria-label={`View case study for ${curated.displayTitle || name}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              Case Study
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center gap-2 shrink-0">

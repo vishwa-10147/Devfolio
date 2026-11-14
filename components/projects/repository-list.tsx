@@ -3,7 +3,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { RepositoryCard } from './repository-card';
 import { RepositoryFiltersPanel, type RepositoryFilters } from './repository-filters';
-import { cn } from '@/lib/utils';
+import { cn, lastModified, orderByPinnedThenModified } from '@/lib/utils';
 import type { NormalizedRepository } from '@/types';
 
 interface RepositoryListProps {
@@ -60,6 +60,11 @@ export function RepositoryList({ repositories, featuredRepos, loading, error }: 
       );
     }
 
+    // Default view: resume projects first, then everything else, newest change first.
+    if (filters.sortBy === 'updated' && filters.sortOrder === 'desc') {
+      return orderByPinnedThenModified(result, featuredRepos);
+    }
+
     result = [...result].sort((a, b) => {
       let aVal: string | number | Date;
       let bVal: string | number | Date;
@@ -79,8 +84,8 @@ export function RepositoryList({ repositories, featuredRepos, loading, error }: 
           break;
         case 'updated':
         default:
-          aVal = new Date(a.updatedAt).getTime();
-          bVal = new Date(b.updatedAt).getTime();
+          aVal = lastModified(a);
+          bVal = lastModified(b);
           break;
       }
 

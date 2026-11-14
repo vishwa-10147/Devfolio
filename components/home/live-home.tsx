@@ -4,6 +4,7 @@ import { Github, Star, ExternalLink } from 'lucide-react';
 import { ProjectCard } from '@/components/projects';
 import { useLiveRepositories } from '@/hooks/use-live-repositories';
 import { FEATURED_REPOS, getCuratedProject } from '@/lib/portfolio';
+import { orderByPinnedThenModified } from '@/lib/utils';
 import type { NormalizedRepository } from '@/types';
 
 export function LiveRepoStats({ initialRepositories, followers }: { initialRepositories: NormalizedRepository[]; followers: number }) {
@@ -31,9 +32,10 @@ export function LiveRepoStats({ initialRepositories, followers }: { initialRepos
 export function LiveFeaturedProjects({ initialRepositories }: { initialRepositories: NormalizedRepository[] }) {
   const { repositories } = useLiveRepositories(initialRepositories);
 
-  const featured = FEATURED_REPOS
-    .map((name) => repositories.find((r) => r.name.toLowerCase() === name))
-    .filter((r): r is NormalizedRepository => r !== undefined);
+  const featured = orderByPinnedThenModified<NormalizedRepository>(
+    repositories.filter((r) => FEATURED_REPOS.includes(r.name.toLowerCase())),
+    FEATURED_REPOS
+  );
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
